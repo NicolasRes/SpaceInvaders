@@ -19,5 +19,9 @@ doc: $(PROG)
 
 clean:
 	rm -f *~ *.o $(PROG)
+<<<<<<< HEAD
 	rm -rf latex html
 
+=======
+	rm -rf latex html
+>>>>>>> 3fa61474b780e268285a51c3c9597d8c4f80c183
