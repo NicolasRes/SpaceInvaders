@@ -175,7 +175,7 @@ void handle_events(SDL_Event *event,world_t *world){
                  world->y += 1;
               }
          }
-         // Pour aller vers la gauche
+         // Pour aller vers la gauche grace a la touche fleche gauche 
          if(event->type == SDL_KEYDOWN){
              //si la touche appuyée est 'Flèche du haut'
              if(event->key.keysym.sym == SDLK_LEFT){
