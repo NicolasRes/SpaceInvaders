@@ -154,7 +154,7 @@ void handle_events(SDL_Event *event,world_t *world){
               }
          }
          // Pour aller vers le bas
-         if(event->type == SLD_KEYDOWN){
+         if(event->type == SDL_KEYDOWN){
              //si la touche appuyée est 'Flèche du bas'
              if(event->key.keysym.sym == SDLK_DOWN){
                  printf("La touche Bas est appuyée\n");
@@ -162,7 +162,7 @@ void handle_events(SDL_Event *event,world_t *world){
               }
          }
          // Pour aller vers le haut
-         if(event->type == SLD_KEYDOWN){
+         if(event->type == SDL_KEYDOWN){
              //si la touche appuyée est 'Flèche du haut'
              if(event->key.keysym.sym == SDLK_UP){
                  printf("La touche Haut est appuyée\n");
