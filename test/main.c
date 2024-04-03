@@ -140,7 +140,7 @@ void handle_events(SDL_Event *event,world_t *world){
     Uint8 *keystates;
     while( SDL_PollEvent( event ) ) {
         
-        //Si l'utilisateur a cliqué sur le X de la fenêtre
+        //Si l'utilisateur a cliqué sur le X de la fenêtre en haut a droite
         if( event->type == SDL_QUIT ) {
             //On indique la fin du jeu
             world->gameover = 1;
