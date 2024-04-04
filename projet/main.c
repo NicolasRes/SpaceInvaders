@@ -34,6 +34,19 @@
 #define MISSILE_SIZE 8
 
 
+/**
+*\brief Vitesse de l'ennemi
+*/
+
+#define ENEMY_SPEED 2
+
+
+/**
+*\brief Vitesse du missile
+*/
+
+#define MISSILE_SPEED 5
+
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -41,8 +54,16 @@
 
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    /* A COMPLETER */
+    SDL_Texture* player;
+    SDL_Texture* v_ennemi;
+    SDL_Texture* missile;
 };
+
+/**
+ * \brief Type qui correspond aux textures du jeu
+*/
+
+typedef struct textures_s textures_t;
 
 /**
 *\brief structure pour représenter le vaisseau
@@ -59,15 +80,10 @@ struct sprite_s {
     int h;
     int w;
     int v;
+    int is_visible;
 };
 
 typedef struct sprite_s sprite_t;
-
-/**
- * \brief Type qui correspond aux textures du jeu
-*/
-
-typedef struct textures_s textures_t;
 
 
 /**
@@ -77,6 +93,8 @@ typedef struct textures_s textures_t;
 struct world_s{
     
     sprite_t * vaisseau;
+    sprite_t * v_ennemi;
+    sprite_t * missile;
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -94,8 +112,31 @@ void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v) {
     sprite->w = w;
     sprite->h = h;
     sprite->v = v;
+    sprite->is_visible = 1;
 }
 
+
+/**
+* \brief Procédure qui rend un sprite visible
+*/
+
+void set_visible (sprite_t * sprite) {
+    sprite->is_visible = 1;
+}
+
+
+/**
+* \brief Procédure qui rend un sprite invisible
+*/
+
+void set_invisible (sprite_t * sprite) {
+    sprite->is_visible = 0;
+}
+
+
+/**
+* \brief 
+*/
 void print_sprite (sprite_t * sprite) {
     printf("Coordonnée x : %d\n", sprite->x);
     printf("Coordonnée y : %d\n", sprite->y);
@@ -113,8 +154,18 @@ void print_sprite (sprite_t * sprite) {
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    init_sprite (world->vaisseau, SCREEN_WIDTH/2, SCREEN_WIDTH-SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+    world->v_ennemi = malloc(sizeof(sprite_t));
+    world->missile = malloc(sizeof(sprite_t));
+
+    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = 5);
     print_sprite(world->vaisseau);
+    
+    init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
+
+    init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED);
+
+    set_invisible(world->missile);
+
     //on n'est pas à la fin du jeu
     world->gameover = 0;
     
@@ -152,7 +203,10 @@ int is_game_over(world_t *world){
  */
 
 void update_data(world_t *world){
-    /* A COMPLETER */
+    world->v_ennemi->y += world->v_ennemi->v;
+    if(world->missile->is_visible == 1) {
+        world->missile->y -= world->missile->v;
+    }
 }
 
 
@@ -172,12 +226,34 @@ void handle_events(SDL_Event *event,world_t *world){
             //On indique la fin du jeu
             world->gameover = 1;
         }
-       
-         //si une touche est appuyée
+
+        //Si l'utilisateur a cliqué sur le X de la fenêtre
+        if( event->type == SDL_KEYDOWN ) {
+            if(event->key.keysym.sym == SDLK_ESCAPE){
+                //si la touche appuyée est 'ESCAPE'
+                world->gameover = 1;
+              }
+        }
+
          if(event->type == SDL_KEYDOWN){
              //si la touche appuyée est 'D'
              if(event->key.keysym.sym == SDLK_d){
-                 printf("La touche D est appuyée\n");
+                world->vaisseau->x += world->vaisseau->v;
+              }
+         }
+
+         if(event->type == SDL_KEYDOWN){
+             //si la touche appuyée est 'G'
+             if(event->key.keysym.sym == SDLK_q){
+                world->vaisseau->x -= world->vaisseau->v;
+              }
+         }
+
+         if(event->type == SDL_KEYDOWN){
+             //si la touche appuyée est 'ESPACE'
+             if(event->key.keysym.sym == SDLK_SPACE){
+                world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
+                world->missile->is_visible = 1;
               }
          }
     }
@@ -191,7 +267,9 @@ void handle_events(SDL_Event *event,world_t *world){
 
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
-    /* A COMPLETER */
+    clean_texture(textures->player);
+    clean_texture(textures->v_ennemi);
+    clean_texture(textures->missile);
 }
 
 
@@ -203,9 +281,10 @@ void clean_textures(textures_t *textures){
 */
 
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
-    textures->background = load_image( "ressources/space-background.bmp",renderer);
-
-    /* A COMPLETER */
+    textures->player = load_image("ressources/spaceship.bmp",renderer);
+    textures->background = load_image("ressources/space-background.bmp",renderer);
+    textures->v_ennemi = load_image("ressources/enemy.bmp",renderer);
+    textures->missile = load_image("ressources/missile.bmp",renderer);
 }
 
 
@@ -221,8 +300,12 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
     }
 }
 
+void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite) {
 
-
+    if (sprite->is_visible == 1) {
+        apply_texture(texture, renderer, sprite->x, sprite->y);
+    }
+}
 
 
 /**
@@ -240,6 +323,15 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //application des textures dans le renderer
     apply_background(renderer, textures);
     /* A COMPLETER */
+
+    //Applicaiton des textures du sprite dans le renderer
+    apply_sprite(renderer, textures->player, world->vaisseau);
+
+    //Applicaiton des textures de l'v_ennemi dans le renderer
+    apply_sprite(renderer, textures->v_ennemi, world->v_ennemi);
+
+    //Applicaiton des textures du missile dans le renderer
+    apply_sprite(renderer, textures->missile, world->missile);
     
     // on met à jour l'écran
     update_screen(renderer);
