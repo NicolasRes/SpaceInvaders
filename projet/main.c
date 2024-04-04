@@ -41,6 +41,7 @@
 
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
+    SDL_Texture* player;
     /* A COMPLETER */
 };
 
@@ -88,22 +89,6 @@ struct world_s{
 
 typedef struct world_s world_t;
 
-void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v) {
-    sprite->x = x;
-    sprite->y = y;
-    sprite->w = w;
-    sprite->h = h;
-    sprite->v = v;
-}
-
-void print_sprite (sprite_t * sprite) {
-    printf("Coordonnée x : %d\n", sprite->x);
-    printf("Coordonnée y : %d\n", sprite->y);
-    printf("Hauteur : %d\n", sprite->h);
-    printf("Largeur : %d\n", sprite->w);
-    printf("Vitesse : %d\n", sprite->v);
-}
-
 
 /**
  * \brief La fonction initialise les données du monde du jeu
@@ -119,19 +104,22 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
     sprite->v =v;
 }
 
-void print_sprite(sprite_t *sprite){
-    printf("X :%d",sprite->x);
+void print_sprite (sprite_t * sprite) {
+    printf("Coordonnée x : %d\n", sprite->x);
+    printf("Coordonnée y : %d\n", sprite->y);
+    printf("Hauteur : %d\n", sprite->h);
+    printf("Largeur : %d\n", sprite->w);
+    printf("Vitesse : %d\n", sprite->v);
 }
+
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    init_sprite (world->vaisseau, SCREEN_WIDTH/2, SCREEN_WIDTH-SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+    init_sprite (world->vaisseau, (SCREEN_WIDTH/2)-(SHIP_SIZE/2), SCREEN_HEIGHT-(SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, 5);
     print_sprite(world->vaisseau);
     //on n'est pas à la fin du jeu
     world->gameover = 0;
 }
-
-
 
 
 
@@ -187,13 +175,22 @@ void handle_events(SDL_Event *event,world_t *world){
             world->gameover = 1;
         }
        
-         //si une touche est appuyée
-         if(event->type == SDL_KEYDOWN){
-             //si la touche appuyée est 'D'
-             if(event->key.keysym.sym == SDLK_d){
-                 printf("La touche D est appuyée\n");
-              }
-         }
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'D'
+            if(event->key.keysym.sym == SDLK_d){
+                world->vaisseau->x+=world->vaisseau->v;
+            }
+        }
+
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'Q'
+            if(event->key.keysym.sym == SDLK_q){
+                world->vaisseau->x-=world->vaisseau->v;
+            }
+        }
+
     }
 }
 
@@ -205,6 +202,7 @@ void handle_events(SDL_Event *event,world_t *world){
 
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
+    clean_texture(textures->player);
     /* A COMPLETER */
 }
 
@@ -217,7 +215,8 @@ void clean_textures(textures_t *textures){
 */
 
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
-    textures->background = load_image( "ressources/space-background.bmp",renderer);
+    textures->background = load_image("ressources/space-background.bmp",renderer);
+    textures->player= load_image ("ressources/spaceship.bmp", renderer);
 
     /* A COMPLETER */
 }
@@ -235,7 +234,12 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
     }
 }
 
+void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite){
 
+    apply_texture(texture, renderer, sprite->x, sprite->y);
+    
+
+}
 
 
 
@@ -253,6 +257,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     
     //application des textures dans le renderer
     apply_background(renderer, textures);
+    apply_sprite(renderer,textures->player,world->vaisseau);
     /* A COMPLETER */
     
     // on met à jour l'écran
