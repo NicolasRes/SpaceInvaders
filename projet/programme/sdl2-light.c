@@ -6,7 +6,7 @@
  * \date 10 mars 2020
 */
 
-#include "sdl2-light.h"
+#include "header/sdl2-light.h"
 #include <stdio.h>
 #include <stdlib.h>
 
