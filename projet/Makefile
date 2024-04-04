@@ -20,3 +20,4 @@ doc: $(PROG)
 clean:
 	rm -f *~ *.o $(PROG)
 	rm -rf latex html
+

@@ -204,10 +204,8 @@ void clean_textures(textures_t *textures){
 
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
-    
-    /* A COMPLETER */
 
-    
+    /* A COMPLETER */
 }
 
 
