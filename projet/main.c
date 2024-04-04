@@ -35,17 +35,6 @@
 
 #define ENEMY_SPEED 2
 
-/**
-*\brief Vitesse de l'ennemi
-*/
-
-#define ENEMY_SPEED 2
-
-
-/**
-*\brief Vitesse du missile
-*/
-
 #define MISSILE_SPEED 5
 
 
@@ -69,12 +58,6 @@ typedef struct textures_s textures_t;
 
 
 /**
- * \brief Type qui correspond aux textures du jeu
-*/
-
-typedef struct textures_s textures_t;
-
-/**
 *\brief structure pour représenter le vaisseau
 *\a x Horizontal
 *\a y Vertical
@@ -93,6 +76,7 @@ struct sprite_s {
 };
 
 typedef struct sprite_s sprite_t;
+
 
 
 /**
@@ -134,7 +118,7 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
 
 
 /**
-* \brief 
+* \brief Affiche les données du sprite
 */
 void print_sprite (sprite_t * sprite) {
     printf("Coordonnée x : %d\n", sprite->x);
@@ -144,29 +128,31 @@ void print_sprite (sprite_t * sprite) {
     printf("Vitesse : %d\n", sprite->v);
 }
 
+/**
+* \brief Rend un sprite visible
+*/
 void set_visible( sprite_t * sprite){
     sprite->is_visible=1;
     
 }
 
+/**
+* \brief Rend un sprite visible
+*/
 void set_invisible( sprite_t * sprite){
     sprite->is_visible=0;
 }
 
+/**
+* \brief Initialise les données du monde
+*/
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    world->Vennemi =malloc(sizeof(sprite_t));
-    world->Missile =malloc(sizeof(sprite_t));
+    world->Vennemi = malloc(sizeof(sprite_t));
+    world->Missile = malloc(sizeof(sprite_t));
 
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2)-(SHIP_SIZE/2), SCREEN_HEIGHT-(SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, 5);
     print_sprite(world->vaisseau);
-    
-    init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
-
-    init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED);
-
-    set_invisible(world->missile);
-
     //on n'est pas à la fin du jeu
     
     init_sprite(world->Vennemi,(SCREEN_WIDTH/2)-(SHIP_SIZE/2),SHIP_SIZE/2,SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
@@ -177,10 +163,7 @@ void init_data(world_t * world){
     print_sprite(world->Missile);
 
     world->gameover = 0;
-
-    
 }   
-
 
 
 /**
@@ -195,7 +178,6 @@ void clean_data(world_t *world){
 }
 
 
-
 /**
  * \brief La fonction indique si le jeu est fini en fonction des données du monde
  * \param world les données du monde
@@ -207,16 +189,15 @@ int is_game_over(world_t *world){
 }
 
 
-
 /**
  * \brief La fonction met à jour les données en tenant compte de la physique du monde
  * \param les données du monde
  */
 
 void update_data(world_t *world){
-    world->v_ennemi->y += world->v_ennemi->v;
-    if(world->missile->is_visible == 1) {
-        world->missile->y -= world->missile->v;
+    world->Vennemi->y+=world->Vennemi->v;
+    if(world->Missile->is_visible==1){
+        world->Missile->y-=world->Missile->v;
     }
 }
 
@@ -237,36 +218,40 @@ void handle_events(SDL_Event *event,world_t *world){
             //On indique la fin du jeu
             world->gameover = 1;
         }
-
-        //Si l'utilisateur a cliqué sur le X de la fenêtre
-        if( event->type == SDL_KEYDOWN ) {
+        
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'D'
             if(event->key.keysym.sym == SDLK_ESCAPE){
-                //si la touche appuyée est 'ESCAPE'
                 world->gameover = 1;
-              }
+            }
         }
 
-         if(event->type == SDL_KEYDOWN){
-             //si la touche appuyée est 'D'
-             if(event->key.keysym.sym == SDLK_d){
-                world->vaisseau->x += world->vaisseau->v;
-              }
-         }
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'D'
+            if(event->key.keysym.sym == SDLK_d){
+                world->vaisseau->x+=world->vaisseau->v;
+            }
+        }
 
-         if(event->type == SDL_KEYDOWN){
-             //si la touche appuyée est 'G'
-             if(event->key.keysym.sym == SDLK_q){
-                world->vaisseau->x -= world->vaisseau->v;
-              }
-         }
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'Q'
+            if(event->key.keysym.sym == SDLK_q){
+                world->vaisseau->x-=world->vaisseau->v;
+            }
+        }
 
-         if(event->type == SDL_KEYDOWN){
-             //si la touche appuyée est 'ESPACE'
-             if(event->key.keysym.sym == SDLK_SPACE){
-                world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
-                world->missile->is_visible = 1;
-              }
-         }
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'Q'
+            if(event->key.keysym.sym == SDLK_SPACE){
+                world->Missile->x=world->vaisseau->x +SHIP_SIZE/2 -MISSILE_SIZE/2;
+
+                world->Missile->is_visible=1;
+            }
+        }
+
     }
 }
 
@@ -279,7 +264,7 @@ void handle_events(SDL_Event *event,world_t *world){
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->player);
-    clean_texture(textures->v_ennemi);
+    clean_texture(textures->ennemi);
     clean_texture(textures->missile);
 }
 
@@ -292,10 +277,10 @@ void clean_textures(textures_t *textures){
 */
 
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
-    textures->player = load_image("ressources/spaceship.bmp",renderer);
     textures->background = load_image("ressources/space-background.bmp",renderer);
-    textures->v_ennemi = load_image("ressources/enemy.bmp",renderer);
-    textures->missile = load_image("ressources/missile.bmp",renderer);
+    textures->player= load_image ("ressources/spaceship.bmp", renderer);
+    textures->ennemi= load_image ("ressources/enemy.bmp", renderer);
+    textures->missile= load_image ("ressources/missile.bmp", renderer);
 }
 
 
@@ -311,6 +296,12 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
     }
 }
 
+/**
+* \brief Applique les textures d'un sprite sur le renderer
+* \param renderer le renderer
+* \param texture la texture à appliquer
+* \param sprite le sprite sur lequel appliquer la texture
+*/
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite){
 
     if(sprite->is_visible==1){
@@ -337,20 +328,10 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     apply_sprite(renderer,textures->ennemi,world->Vennemi);
     apply_sprite(renderer,textures->missile,world->Missile);
     /* A COMPLETER */
-
-    //Applicaiton des textures du sprite dans le renderer
-    apply_sprite(renderer, textures->player, world->vaisseau);
-
-    //Applicaiton des textures de l'v_ennemi dans le renderer
-    apply_sprite(renderer, textures->v_ennemi, world->v_ennemi);
-
-    //Applicaiton des textures du missile dans le renderer
-    apply_sprite(renderer, textures->missile, world->missile);
     
     // on met à jour l'écran
     update_screen(renderer);
 }
-
 
 
 /**
@@ -366,7 +347,6 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, wo
     clean_textures(textures);
     clean_sdl(renderer,window);
 }
-
 
 
 /**
@@ -387,7 +367,6 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
 /**
  *  \brief programme principal qui implémente la boucle du jeu
  */
-
 
 int main( int argc, char* args[] )
 {
