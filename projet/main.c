@@ -33,8 +33,14 @@
 
 #define MISSILE_SIZE 8
 
+/**
+* \brief Vitesse de l'ennemi
+*/
 #define ENEMY_SPEED 2
 
+/**
+* \brief Vitesse du missile
+*/
 #define MISSILE_SPEED 5
 
 
