@@ -6,9 +6,9 @@
  * \date 18 mars 2020
  */
 
-#include "header/sdl2-light.h"
-#include "header/graphique.h"
-#include "header/donnees.h"
+#include "sdl2-light.h"
+#include "graphique.h"
+#include "donnees.h"
 
 
 /**
