@@ -33,6 +33,7 @@
 
 #define MISSILE_SIZE 8
 
+#define ENEMY_SPEED 2
 
 /**
 *\brief Vitesse de l'ennemi
@@ -55,9 +56,10 @@
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* player;
-    SDL_Texture* v_ennemi;
-    SDL_Texture* missile;
+    SDL_Texture* ennemi;
+    /* A COMPLETER */
 };
+typedef struct sprite_s sprite_t;
 
 /**
  * \brief Type qui correspond aux textures du jeu
@@ -83,7 +85,6 @@ struct sprite_s {
     int is_visible;
 };
 
-typedef struct sprite_s sprite_t;
 
 
 /**
@@ -93,8 +94,8 @@ typedef struct sprite_s sprite_t;
 struct world_s{
     
     sprite_t * vaisseau;
-    sprite_t * v_ennemi;
-    sprite_t * missile;
+    sprite_t * Vennemi;  
+
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -106,31 +107,19 @@ struct world_s{
 
 typedef struct world_s world_t;
 
-void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v) {
-    sprite->x = x;
-    sprite->y = y;
-    sprite->w = w;
-    sprite->h = h;
-    sprite->v = v;
-    sprite->is_visible = 1;
-}
-
 
 /**
-* \brief Procédure qui rend un sprite visible
-*/
+ * \brief La fonction initialise les données du monde du jeu
+ * \param world les données du monde
+ */
 
-void set_visible (sprite_t * sprite) {
-    sprite->is_visible = 1;
-}
+void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
 
-
-/**
-* \brief Procédure qui rend un sprite invisible
-*/
-
-void set_invisible (sprite_t * sprite) {
-    sprite->is_visible = 0;
+    sprite->x =x;
+    sprite->y =y;
+    sprite->w =w;
+    sprite->h =h;
+    sprite->v =v;
 }
 
 
@@ -146,18 +135,11 @@ void print_sprite (sprite_t * sprite) {
 }
 
 
-/**
- * \brief La fonction initialise les données du monde du jeu
- * \param world les données du monde
- */
-
-
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    world->v_ennemi = malloc(sizeof(sprite_t));
-    world->missile = malloc(sizeof(sprite_t));
+    world->Vennemi =malloc(sizeof(sprite_t));
 
-    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = 5);
+    init_sprite (world->vaisseau, (SCREEN_WIDTH/2)-(SHIP_SIZE/2), SCREEN_HEIGHT-(SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, 5);
     print_sprite(world->vaisseau);
     
     init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
@@ -167,9 +149,14 @@ void init_data(world_t * world){
     set_invisible(world->missile);
 
     //on n'est pas à la fin du jeu
-    world->gameover = 0;
     
-}
+    init_sprite(world->Vennemi,(SCREEN_WIDTH/2)-(SHIP_SIZE/2),SHIP_SIZE/2,SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
+    print_sprite(world->Vennemi);
+    world->gameover = 0;
+
+    
+}   
+
 
 
 /**
@@ -322,6 +309,8 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     
     //application des textures dans le renderer
     apply_background(renderer, textures);
+    apply_sprite(renderer,textures->player,world->vaisseau);
+    apply_sprite(renderer,textures->ennemi,world->Vennemi);
     /* A COMPLETER */
 
     //Applicaiton des textures du sprite dans le renderer
