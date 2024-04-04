@@ -12,7 +12,7 @@ PROG = spacebattle
 
 spacebattle: $(OBJ)
 	gcc $(CFLAGS) $(OBJ) $(LDFLAGS) -o $@
-
+	
 doc: $(PROG)
 	doxygen ./$(PROG)
 	make -C latex
@@ -20,4 +20,5 @@ doc: $(PROG)
 clean:
 	rm -f *~ *.o $(PROG)
 	rm -rf latex html
+
 

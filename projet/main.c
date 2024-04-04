@@ -33,6 +33,7 @@
 
 #define MISSILE_SIZE 8
 
+#define ENEMY_SPEED 2
 
 
 /**
@@ -42,8 +43,10 @@
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* player;
+    SDL_Texture* ennemi;
     /* A COMPLETER */
 };
+typedef struct sprite_s sprite_t;
 
 /**
 *\brief structure pour représenter le vaisseau
@@ -62,7 +65,6 @@ struct sprite_s {
     int v;
 };
 
-typedef struct sprite_s sprite_t;
 
 /**
  * \brief Type qui correspond aux textures du jeu
@@ -78,6 +80,8 @@ typedef struct textures_s textures_t;
 struct world_s{
     
     sprite_t * vaisseau;
+    sprite_t * Vennemi;  
+
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -115,11 +119,18 @@ void print_sprite (sprite_t * sprite) {
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
+    world->Vennemi =malloc(sizeof(sprite_t));
+
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2)-(SHIP_SIZE/2), SCREEN_HEIGHT-(SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, 5);
     print_sprite(world->vaisseau);
     //on n'est pas à la fin du jeu
+    
+    init_sprite(world->Vennemi,(SCREEN_WIDTH/2)-(SHIP_SIZE/2),SHIP_SIZE/2,SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
+    print_sprite(world->Vennemi);
     world->gameover = 0;
-}
+
+    
+}   
 
 
 
@@ -154,7 +165,7 @@ int is_game_over(world_t *world){
  */
 
 void update_data(world_t *world){
-    /* A COMPLETER */
+    world->Vennemi->y+=world->Vennemi->v;
 }
 
 
@@ -174,7 +185,15 @@ void handle_events(SDL_Event *event,world_t *world){
             //On indique la fin du jeu
             world->gameover = 1;
         }
-       
+        
+        //si une touche est appuyée
+        if(event->type == SDL_KEYDOWN){
+            //si la touche appuyée est 'D'
+            if(event->key.keysym.sym == SDLK_ESCAPE){
+                world->gameover = 1;
+            }
+        }
+
         //si une touche est appuyée
         if(event->type == SDL_KEYDOWN){
             //si la touche appuyée est 'D'
@@ -203,6 +222,7 @@ void handle_events(SDL_Event *event,world_t *world){
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->player);
+    clean_texture(textures->ennemi);
     /* A COMPLETER */
 }
 
@@ -217,6 +237,7 @@ void clean_textures(textures_t *textures){
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image("ressources/space-background.bmp",renderer);
     textures->player= load_image ("ressources/spaceship.bmp", renderer);
+    textures->ennemi= load_image ("ressources/enemy.bmp", renderer);
 
     /* A COMPLETER */
 }
@@ -237,7 +258,6 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite){
 
     apply_texture(texture, renderer, sprite->x, sprite->y);
-    
 
 }
 
@@ -258,6 +278,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //application des textures dans le renderer
     apply_background(renderer, textures);
     apply_sprite(renderer,textures->player,world->vaisseau);
+    apply_sprite(renderer,textures->ennemi,world->Vennemi);
     /* A COMPLETER */
     
     // on met à jour l'écran
