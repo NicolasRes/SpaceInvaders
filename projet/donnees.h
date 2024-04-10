@@ -115,7 +115,8 @@ void limite_ecran_joueur(world_t *world);
  */
 void limite_ecran_ennemi(world_t *world);
 
+void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2);
 
-
-
+int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2);
+int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2);
 #endif

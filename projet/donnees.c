@@ -138,7 +138,6 @@ void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2) {
     if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
         sp1->is_alive = 0;
         sp2->is_alive = 0;
-
     }
 }
 
