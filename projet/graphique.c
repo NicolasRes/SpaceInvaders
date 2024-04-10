@@ -22,7 +22,12 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
     }
 }
 
-
+void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures){
+    for (int i=0;i<NB_ENEMIES;i++){
+        apply_sprite(renderer,textures->v_ennemi,world->enemies[i]);
+    }
+    
+}
 
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
     
@@ -37,7 +42,8 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     apply_sprite(renderer, textures->player, world->vaisseau);
 
     //Applicaiton des textures de l'v_ennemi dans le renderer
-    apply_sprite(renderer, textures->v_ennemi, world->v_ennemi);
+    //apply_sprite(renderer, textures->v_ennemi, world->v_ennemi);
+    apply_enemies(renderer,world,textures);
 
     //Applicaiton des textures du missile dans le renderer
     apply_sprite(renderer, textures->missile, world->missile);

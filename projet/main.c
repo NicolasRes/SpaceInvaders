@@ -37,14 +37,14 @@ int main( int argc, char* args[] ){
         
         //mise à jour des données liée à la physique du monde
         update_data(&world);
-        
         //rafraichissement de l'écran
         refresh_graphics(renderer,&world,&textures);
-        
         // pause de 10 ms pour controler la vitesse de rafraichissement
         pause(10);
     }
+    printf("%d", world.score);
     
+    printf("%d", world.nb_v_out);
     //nettoyage final
     clean(window,renderer,&textures,&world);
     

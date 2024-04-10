@@ -32,9 +32,11 @@ typedef struct sprite_s sprite_t;
 struct world_s{
     
     sprite_t * vaisseau;
-    sprite_t * v_ennemi;
+    //sprite_t * v_ennemi;
     sprite_t * missile;
     sprite_t ** enemies;
+    int nb_v_out;
+    int  score;
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -116,7 +118,9 @@ void limite_ecran_joueur(world_t *world);
  */
 void limite_ecran_ennemi(world_t *world);
 
-void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2);
+void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2);
+
+void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *world);
 
 int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2);
 

@@ -53,22 +53,25 @@ void print_sprite (sprite_t * sprite) {
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    world->v_ennemi = malloc(sizeof(sprite_t));
+    //world->v_ennemi = malloc(sizeof(sprite_t));
     world->missile = malloc(sizeof(sprite_t));
+    world->nb_v_out = 0;
+    world->score = 0;
 
 
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = 5,1);
     print_sprite(world->vaisseau);
     
-    init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
+    //init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
+   
 
-    init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,1);
+    init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,0);
 
     init_enemies(world);
 
 
     set_invisible(world->missile);
-
+    
     //on n'est pas à la fin du jeu
     world->gameover = 0;
     
@@ -76,9 +79,12 @@ void init_data(world_t * world){
 
 void clean_data(world_t *world){
     free(world->vaisseau);
-    free(world->v_ennemi);
+    //free(world->v_ennemi);
     free(world->missile);
-    free(world);
+    for (int i=0;i<NB_ENEMIES;i++){
+        (world->enemies[i]);
+    }
+    free(world->enemies);
 }
 
 
@@ -100,14 +106,35 @@ void limite_ecran_joueur(world_t *world){
     }
 }
 
+
 void limite_ecran_ennemi(world_t *world){
 
     // Limite basse
-    if (world->v_ennemi->y > SCREEN_HEIGHT) {
-        world->v_ennemi->y = SHIP_SIZE/2;
+
+    for (int i = 0; i < NB_ENEMIES; i++) {
+         if (world->enemies[i]->y > SCREEN_HEIGHT) {
+            if (world->enemies[i]->is_alive == 1) {
+                world->enemies[i]->is_alive = 0;
+                world->nb_v_out += 1;
+            }
+            
+            
+        }
     }
+    
+
 
 }
+
+void limite_ecran_missile(world_t * world){
+
+    //Limite gauche
+    if (world->missile->y < 0) {
+        world->missile->is_alive= 0;
+        world->missile->is_visible= 0;
+    }
+}
+
 
 int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2) {
     
@@ -155,27 +182,58 @@ int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2) {
 }
  
 
-void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2) {
+void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     // Vérifier si les deux sprites sont encore visibles, en vie et en collision
     if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
         sp1->is_alive = 0;
         sp2->is_alive = 0;
     }
+    
 }
 
+void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *world) {
+    // Vérifier si les deux sprites sont encore visibles, en vie et en collision
+    if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
+        sp1->is_alive = 0;
+        sp2->is_alive = 0;
+        set_invisible(sp1);
+        sp1->is_alive=0;
+        world->score+=1;
+    }
+    
+}
 
+void update_enemies(world_t *world){
+    for(int i=0;i<NB_ENEMIES;i++){
+
+        world->enemies[i]->y +=world->enemies[i]->v;
+    }
+
+}
 
 void update_data(world_t *world){
-    world->v_ennemi->y += world->v_ennemi->v;
+    //world->v_ennemi->y += world->v_ennemi->v;
+    update_enemies(world);
     if(world->missile->is_visible == 1) {
         world->missile->y -= world->missile->v;
     }
 
     limite_ecran_joueur(world);
     limite_ecran_ennemi(world);
+    limite_ecran_missile(world);
     
-    handle_sprites_collision(world->vaisseau,world->v_ennemi);
-    handle_sprites_collision(world->missile,world->v_ennemi);
+    for (int i = 0; i < NB_ENEMIES; i++) {
+        handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
+        handle_sprites_collision_missile(world->missile,world->enemies[i],world);
+       
+    }
+
+    if(world->nb_v_out+world->score == NB_ENEMIES ){
+        world->gameover =1;
+    }
+
+    printf("V out :%d\n", world->nb_v_out);
+    printf("Score :%d\n", world->score);
 }
 
 
@@ -213,9 +271,11 @@ void handle_events(SDL_Event *event,world_t *world){
         }
 
          // Si la touche appuyée est 'ESPACE' et que le vaisseau est visible
-        if (event->key.keysym.sym == SDLK_SPACE && world->vaisseau->is_visible) {
+        if (event->key.keysym.sym == SDLK_SPACE && world->vaisseau->is_visible && world->vaisseau->is_alive && world->missile->is_alive==0 &&  world->missile->is_visible==0){
             world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
+            world->missile->y = world->vaisseau->y - MISSILE_SIZE;
             world->missile->is_visible = 1;
+            world->missile->is_alive=1;
         }
     }
 }
