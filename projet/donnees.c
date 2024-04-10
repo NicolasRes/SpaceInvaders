@@ -1,10 +1,10 @@
-
-
 #include"donnees.h"
 #include "constantes.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+
+
 
 void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv) {
     sprite->x = x;
@@ -16,28 +16,14 @@ void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv)
     sprite->is_alive=alv;
 }
 
-
-/**
-* \brief Procédure qui rend un sprite visible
-*/
-
 void set_visible (sprite_t * sprite) {
     sprite->is_visible = 1;
 }
-
-
-/**
-* \brief Procédure qui rend un sprite invisible
-*/
 
 void set_invisible (sprite_t * sprite) {
     sprite->is_visible = 0;
 }
 
-
-/**
-* \brief 
-*/
 void print_sprite (sprite_t * sprite) {
     printf("Coordonnée x : %d\n", sprite->x);
     printf("Coordonnée y : %d\n", sprite->y);
@@ -46,12 +32,6 @@ void print_sprite (sprite_t * sprite) {
     printf("Vitesse : %d\n", sprite->v);
     printf("en vie :%d\n ", sprite->is_alive);
 }
-
-/**
- * \brief La fonction initialise les données du monde du jeu
- * \param world les données du monde
- */
-
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
@@ -72,12 +52,6 @@ void init_data(world_t * world){
     
 }
 
-/**
- * \brief La fonction nettoie les données du monde
- * \param world les données du monde
- */
-
-
 void clean_data(world_t *world){
     free(world->vaisseau);
     free(world->v_ennemi);
@@ -86,11 +60,6 @@ void clean_data(world_t *world){
 }
 
 
-/**
- * \brief La fonction indique si le jeu est fini en fonction des données du monde
- * \param world les données du monde
- * \return 1 si le jeu est fini, 0 sinon
- */
 
 int is_game_over(world_t *world){
     return world->gameover;
@@ -173,10 +142,7 @@ void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2) {
     }
 }
 
-/**
- * \brief La fonction met à jour les données en tenant compte de la physique du monde
- * \param les données du monde
- */
+
 
 void update_data(world_t *world){
     world->v_ennemi->y += world->v_ennemi->v;
@@ -192,14 +158,6 @@ void update_data(world_t *world){
 }
 
 
-
-
-
-/**
- * \brief La fonction gère les évènements ayant eu lieu et qui n'ont pas encore été traités
- * \param event paramètre qui contient les événements
- * \param world les données du monde
- */
 
 void handle_events(SDL_Event *event,world_t *world){
     Uint8 *keystates;

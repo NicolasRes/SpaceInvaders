@@ -45,28 +45,74 @@ struct world_s{
 
 typedef struct world_s world_t;
 
-
+/**
+ * \brief La fonction initialise les données du monde du jeu
+ * \param world les données du monde
+ */
 void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv);
 
-
+/**
+* \brief Procédure qui rend un sprite visible
+*/
 void set_visible (sprite_t * sprite);
 
+/**
+* \brief Procédure qui rend un sprite invisible
+*/
 void set_invisible (sprite_t * sprite);
 
+/**
+* \brief 
+*/
 void print_sprite (sprite_t * sprite);
+
+/**
+ * \brief La fonction initialise les données du monde du jeu
+ * \param world les données du monde
+ */
 
 void init_data(world_t * world);
 
+/**
+ * \brief La fonction nettoie les données du monde
+ * \param world les données du monde
+ */
 void clean_data(world_t *world);
+
+/**
+ * \brief La fonction indique si le jeu est fini en fonction des données du monde
+ * \param world les données du monde
+ * \return 1 si le jeu est fini, 0 sinon
+ */
 
 int is_game_over(world_t *world);
 
+/**
+ * \brief La fonction met à jour les données en tenant compte de la physique du monde
+ * \param world données du monde
+ */
+
 void update_data(world_t *world);
+
+
+/**
+ * \brief La fonction gère les évènements ayant eu lieu et qui n'ont pas encore été traités
+ * \param event paramètre qui contient les événements
+ * \param world les données du monde
+ */
 
 void handle_events(SDL_Event *event,world_t *world);
 
+/**
+ * \brief La fonction qui test le dépassement des limites gauche et droites
+ * \param wolrd données du monde
+ */
 void limite_ecran_joueur(world_t *world);
 
+/**
+ * \brief La fonction qui test le dépassement des limites haut et bas
+ * \param wolrd données du monde
+ */
 void limite_ecran_ennemi(world_t *world);
 
 

@@ -17,7 +17,6 @@ void test_init_sprite_param(){
 }
 
 
-
 #undef main
 
 
