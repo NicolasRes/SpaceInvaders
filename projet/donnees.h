@@ -116,6 +116,20 @@ void limite_ecran_joueur(world_t *world);
 void limite_ecran_ennemi(world_t *world);
 
 
+/**
+* \brief Fonction qui vérifie si une collision a eu lieu entre le vaisseau du joueur et le vaisseau ennemi
+*/
+void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2);
+
+/**
+*  \brief Fonction qui crée des hitbox circulaires pour les vaisseaux
+*/
+int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2);
+
+/**
+* \brief Fonction qui crée des hitbox rectangulaires pour les vaisseaux
+*/
+int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2);
 
 
 #endif
