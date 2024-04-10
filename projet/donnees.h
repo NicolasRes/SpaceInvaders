@@ -2,7 +2,7 @@
 #define __DONNEES__H__
 
 #include "SDL2/SDL.h"
-
+#include "constantes.h"
 /**
 *\brief structure pour représenter le vaisseau
 *\a x Horizontal
@@ -34,6 +34,7 @@ struct world_s{
     sprite_t * vaisseau;
     sprite_t * v_ennemi;
     sprite_t * missile;
+    sprite_t ** enemies;
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -117,25 +118,12 @@ void limite_ecran_ennemi(world_t *world);
 
 void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2);
 
-<<<<<<< HEAD
-int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2);
-int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2);
-=======
-/**
-* \brief Fonction qui vérifie si une collision a eu lieu entre le vaisseau du joueur et le vaisseau ennemi
-*/
-void handle_sprites_collision(sprite_t *sp1, sprite_t *sp2);
-
-/**
-*  \brief Fonction qui crée des hitbox circulaires pour les vaisseaux
-*/
 int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2);
 
-/**
-* \brief Fonction qui crée des hitbox rectangulaires pour les vaisseaux
-*/
 int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2);
 
+int generate_number (int a,int b );
 
->>>>>>> 877ed22d2fec6e1a684c7d7d9cdf8212541ce20c
+void init_enemies(world_t *world);
+
 #endif

@@ -101,14 +101,15 @@ void test_bordure_gauche_param(world_t * world) {
 * \brief Procédure qui teste les bordures du monde
 */
 void test_bordure() {
-    world_t world;
+    world_t *world;
 
-    world.vaisseau = malloc(sizeof(sprite_t));
+    world->vaisseau = malloc(sizeof(sprite_t));
 
-    init_sprite(world.vaisseau, 50, 45, 100, 80, 2, 1);
+    init_sprite(world->vaisseau, 50, 45, 100, 80, 2, 1);
     //test_bordure_droite_param(&world);
-    test_bordure_gauche_param(&world);
-    free(world.vaisseau);
+    test_bordure_gauche_param(world);
+    free(world->vaisseau);
+    free(world);
 }
 
 /**
@@ -180,6 +181,22 @@ void test_handle_sprites_collision() {
     }
 }
 
+void test_init_enemies(){
+    world_t *world = malloc(sizeof(world_t));
+    
+    init_enemies(world);
+    
+    for(int j=0;j<NB_ENEMIES;j++){
+        print_sprite(world->enemies[j]);
+        printf("\n");
+    }
+    
+    for (int i=0;i<NB_ENEMIES;i++){
+        (world->enemies[i]);
+    }
+    free(world->enemies);
+   
+}
 
 #undef main
 
@@ -189,5 +206,6 @@ int main( int argc, char* args[] ){
     //test_init_sprite();
     //test_bordure();
     //test_sprites_collide_cercle();
-    test_handle_sprites_collision();
+    //test_handle_sprites_collision();
+    test_init_enemies();
 }

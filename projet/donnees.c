@@ -1,10 +1,14 @@
 #include"donnees.h"
-#include "constantes.h"
 #include <stdlib.h>
+#include<time.h>
 #include <stdio.h>
 #include <math.h>
 
 
+
+int generate_number (int a,int b ) {
+    return rand ()%( b-a)+a ;
+}
 
 void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv) {
     sprite->x = x;
@@ -15,6 +19,20 @@ void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv)
     sprite->is_visible = 1;
     sprite->is_alive=alv;
 }
+
+void init_enemies(world_t *world){
+   
+    world->enemies=malloc(NB_ENEMIES*sizeof(sprite_t*));
+    for(int i=0;i<NB_ENEMIES;i++){
+        world->enemies[i]= malloc(sizeof(sprite_t));
+    }
+    for (int i=0;i<NB_ENEMIES;i++){
+        init_sprite(world->enemies[i],generate_number(SHIP_SIZE,SCREEN_WIDTH-SHIP_SIZE/2),-SHIP_SIZE/2 - i * VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED,1);
+    }
+    
+}
+
+
 
 void set_visible (sprite_t * sprite) {
     sprite->is_visible = 1;
@@ -38,12 +56,16 @@ void init_data(world_t * world){
     world->v_ennemi = malloc(sizeof(sprite_t));
     world->missile = malloc(sizeof(sprite_t));
 
+
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = 5,1);
     print_sprite(world->vaisseau);
     
     init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
 
     init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,1);
+
+    init_enemies(world);
+
 
     set_invisible(world->missile);
 

@@ -37,5 +37,11 @@
 */
 #define MISSILE_SPEED 5
 
+/**
+* \brief nombre d'ennemis
+*/
+#define NB_ENEMIES 5
+
+#define VERTICAL_DIST 2*SHIP_SIZE
 
 #endif
