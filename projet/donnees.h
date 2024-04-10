@@ -1,8 +1,7 @@
-#ifndef DONNEES_H
-#define DONNEES_H
+#ifndef __DONNEES__H__
+#define __DONNEES__H__
 
-#include "sdl2-light.h"
-
+#include "SDL2/SDL.h"
 
 /**
 *\brief structure pour représenter le vaisseau
@@ -20,6 +19,7 @@ struct sprite_s {
     int w;
     int v;
     int is_visible;
+    int is_alive;
 };
 
 typedef struct sprite_s sprite_t;
@@ -32,9 +32,8 @@ typedef struct sprite_s sprite_t;
 struct world_s{
     
     sprite_t * vaisseau;
-    sprite_t * Vennemi; 
-    sprite_t * Missile; 
-
+    sprite_t * v_ennemi;
+    sprite_t * missile;
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -47,61 +46,28 @@ struct world_s{
 typedef struct world_s world_t;
 
 
-/**
-* \brief Affiche les données du sprite
-*/
+void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv);
+
+
+void set_visible (sprite_t * sprite);
+
+void set_invisible (sprite_t * sprite);
+
 void print_sprite (sprite_t * sprite);
 
-
-/**
-* \brief Rend un sprite visible
-*/
-void set_visible( sprite_t * sprite);
-
-/**
-* \brief Rend un sprite visible
-*/
-void set_invisible( sprite_t * sprite);
-
-/**
-* \brief Initialise les données du monde
-*/
 void init_data(world_t * world);
-
-/**
- * \brief La fonction nettoie les données du monde
- * \param world les données du monde
- */
 
 void clean_data(world_t *world);
 
-
-/**
- * \brief La fonction indique si le jeu est fini en fonction des données du monde
- * \param world les données du monde
- * \return 1 si le jeu est fini, 0 sinon
- */
-
 int is_game_over(world_t *world);
-
-
-/**
- * \brief La fonction met à jour les données en tenant compte de la physique du monde
- * \param les données du monde
- */
 
 void update_data(world_t *world);
 
-/**
- * \brief La fonction gère les évènements ayant eu lieu et qui n'ont pas encore été traités
- * \param event paramètre qui contient les événements
- * \param world les données du monde
- */
-
 void handle_events(SDL_Event *event,world_t *world);
 
+void limite_ecran_joueur(world_t *world);
 
-
+void limite_ecran_ennemi(world_t *world);
 
 
 

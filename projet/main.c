@@ -1,11 +1,15 @@
 /**
  * \file main.c
- * \brief Programme principal initial du niveau 1
- * \author Mathieu Constant
+ * \brief Programme principal initial du niveau 2
+ * \author  Mathias et Nicolas 
  * \version 1.0
- * \date 18 mars 2020
+ * 
  */
 
+
+
+#include <stdlib.h>
+#include <stdio.h>
 #include "sdl2-light.h"
 #include "graphique.h"
 #include "donnees.h"
@@ -15,8 +19,8 @@
  *  \brief programme principal qui implémente la boucle du jeu
  */
 
-int main( int argc, char* args[] )
-{
+
+int main( int argc, char* args[] ){
     SDL_Event event;
     world_t world;
     textures_t textures;
