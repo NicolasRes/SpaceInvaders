@@ -191,7 +191,7 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
         sp1->is_alive = 0;
         sp2->is_alive = 0;
         set_invisible(sp1);
-        sp1->is_alive=0;
+        
         world->score+=1;
     }
     
@@ -219,7 +219,12 @@ void MessageVictoire(world_t * world){
         printf("Votre Score est mutiplié par 2, score : %d\n", world->score);
 
     }else{
-        printf("Un ennemi vous a abattu, Score: %d\n",world->score);
+        if(world->nb_v_out!=0){
+            printf("Vous n'avez ni gagné ni perdu, score: %d\n",world->score);
+        }else{
+            printf("Un ennemi vous a abattu, Score: %d\n",world->score);
+        }
+        
     } 
     
 
@@ -228,9 +233,8 @@ void MessageVictoire(world_t * world){
 void compute_game(world_t *world){
 
     if (world->vaisseau->is_alive == 0){
-            
-        world->gameover=1;
-        
+        world->score =0;
+        world->gameover=1;  
     } 
 
     if(world->nb_v_out + world->score == NB_ENEMIES ){
@@ -239,13 +243,10 @@ void compute_game(world_t *world){
             world->win=1;
             world->gameover =1;
             
-        }else{
-            world->score =0;
+        }else{ 
             world->gameover =1;
-        }
-            
+        }   
     } 
-    
 }
 
 

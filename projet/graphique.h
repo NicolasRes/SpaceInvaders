@@ -5,6 +5,7 @@
 #include "donnees.h"
 #include "constantes.h"
 #include "sdl2-ttf-light.h"
+#include <stdlib.h>
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -81,5 +82,8 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
  * \param sprite le sprite qu el'on doit appliquer
  */
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite);
+
+
+char* int_to_string(int value);
 
 #endif

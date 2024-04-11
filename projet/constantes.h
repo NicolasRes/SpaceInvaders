@@ -30,14 +30,14 @@
 /**
 * \brief Vitesse de l'ennemi
 */
-#define ENEMY_SPEED 1
+#define ENEMY_SPEED 3
 
-#define VAISSEAU_SPEED 5
+#define VAISSEAU_SPEED 8
 
 /**
 * \brief Vitesse du missile
 */
-#define MISSILE_SPEED 4
+#define MISSILE_SPEED 10
 
 /**
 * \brief nombre d'ennemis

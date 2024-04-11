@@ -191,10 +191,39 @@ void test_init_enemies(){
     }
     
     for (int i=0;i<NB_ENEMIES;i++){
-        (world->enemies[i]);
+        free(world->enemies[i]);
     }
     free(world->enemies);
+    free(world);
    
+}
+
+
+void test_update_enemies(){
+
+    world_t *world = malloc(sizeof(world_t));
+    
+    init_enemies(world);
+    printf("Avant fonction update..\n\n");
+    for(int j=0;j<NB_ENEMIES;j++){
+        print_sprite(world->enemies[j]);
+        printf("\n");
+    }
+
+    update_enemies(world);
+
+    printf("Après fonction update..\n\n");
+    for(int j=0;j<NB_ENEMIES;j++){
+        print_sprite(world->enemies[j]);
+        printf("\n");
+    }
+    
+    for (int i=0;i<NB_ENEMIES;i++){
+        free(world->enemies[i]);
+    }
+
+    free(world->enemies);
+    free(world);
 }
 
 #undef main
@@ -206,5 +235,6 @@ int main( int argc, char* args[] ){
     //test_bordure();
     //test_sprites_collide_cercle();
     //test_handle_sprites_collision();
-    test_init_enemies();
+    //test_init_enemies();
+    test_update_enemies();
 }

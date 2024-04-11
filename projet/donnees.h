@@ -137,4 +137,6 @@ void MessageVictoire(world_t * world);
 
 void compute_game(world_t *world);
 
+void update_enemies(world_t *world);
+
 #endif

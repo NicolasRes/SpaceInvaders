@@ -32,8 +32,18 @@ void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures){
     
 }
 
-void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
+char* int_to_string(int value) {
+    int taille_mini=20;
+    char* str = malloc(sizeof(char) * taille_mini); 
+    // Convertir l'entier en une chaîne de caractères
+    sprintf(str, "%d", value);
     
+   
+    return str;
+}
+
+void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
+    char* score_str = int_to_string(world->score);
     //on vide le renderer
     clear_renderer(renderer);
     
@@ -51,7 +61,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //Applicaiton des textures du missile dans le renderer
     apply_sprite(renderer, textures->missile, world->missile);
 
-    apply_text(renderer,10,10,14*4,14,"test",textures->font);
+    apply_text(renderer,10,10,25,50,score_str,textures->font);
     
     // on met à jour l'écran
     update_screen(renderer);

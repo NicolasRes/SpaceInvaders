@@ -42,7 +42,7 @@ int main( int argc, char* args[] ){
         //rafraichissement de l'écran
         refresh_graphics(renderer,&world,&textures);
         // pause de 10 ms pour controler la vitesse de rafraichissement
-        pause(10);
+        pause(17);
     }
     MessageVictoire(&world);
     pause(TEMPS);
