@@ -4,8 +4,7 @@
 #include "sdl2-light.h"
 #include "donnees.h"
 #include "constantes.h"
-
-
+#include "sdl2-ttf-light.h"
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -16,6 +15,7 @@ struct textures_s{
     SDL_Texture* player;
     SDL_Texture* v_ennemi;
     SDL_Texture* missile;
+    TTF_Font * font;
 };
 
 /**

@@ -4,7 +4,8 @@
 #include "SDL2/SDL.h"
 #include "sdl2-light.h"
 #include "constantes.h"
-/**
+
+/*
 *\brief structure pour représenter le vaisseau
 *\a x Horizontal
 *\a y Vertical

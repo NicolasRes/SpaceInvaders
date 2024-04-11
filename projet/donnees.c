@@ -240,6 +240,7 @@ void compute_game(world_t *world){
             world->gameover =1;
             
         }else{
+            world->score =0;
             world->gameover =1;
         }
             
