@@ -2,7 +2,6 @@
 #define CONSTANTES_H
 
 
-
 /**
  * \brief Largeur de l'écran de jeu
  */
@@ -32,7 +31,10 @@
 */
 #define ENEMY_SPEED 3
 
-#define VAISSEAU_SPEED 8
+/**
+ * \brief Vitesse du vaisseau
+*/
+#define VAISSEAU_SPEED 5
 
 /**
 * \brief Vitesse du missile
@@ -40,12 +42,18 @@
 #define MISSILE_SPEED 10
 
 /**
-* \brief nombre d'ennemis
+* \brief Nombre d'ennemis
 */
 #define NB_ENEMIES 3
 
+/**
+ * \brief Distance verticale entre les vaisseaux
+*/
 #define VERTICAL_DIST 2*SHIP_SIZE
 
+/**
+ * \brief Temps d'attente avant fermeture du jeu
+*/
 #define TEMPS 2000
 
 #endif

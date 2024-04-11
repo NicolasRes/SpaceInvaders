@@ -6,15 +6,12 @@
  * 
  */
 
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "sdl2-light.h"
 #include "graphique.h"
 #include "donnees.h"
-#include<time.h>
-
+#include <time.h>
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu
@@ -28,7 +25,7 @@ int main( int argc, char* args[] ){
     SDL_Renderer *renderer;
     SDL_Window *window;
 
-    srand (time (NULL ) ) ;
+    srand(time(NULL)) ;
     //initialisation du jeu
     init(&window,&renderer,&textures,&world);
     
@@ -48,7 +45,6 @@ int main( int argc, char* args[] ){
     pause(TEMPS);
     //nettoyage final
     clean(window,renderer,&textures,&world);
-    
     
     return 0;
 }

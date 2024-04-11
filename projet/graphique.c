@@ -18,7 +18,6 @@ void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     
 }
 
-
 void apply_background(SDL_Renderer *renderer, textures_t *textures){
     if(textures->background != NULL){
       apply_texture(textures->background, renderer, 0, 0);
@@ -32,36 +31,37 @@ void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures){
     
 }
 
-char* int_to_string(int value) {
-    int taille_mini=20;
-    char* str = malloc(sizeof(char) * taille_mini); 
-    // Convertir l'entier en une chaîne de caractères
+char* int_to_string (int value) {
+    int taille_mini = 20;
+    char * str = malloc(sizeof(char)*taille_mini);
     sprintf(str, "%d", value);
-    
-   
     return str;
 }
 
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
-    char* score_str = int_to_string(world->score);
+    
+    char * score_str = int_to_string(world->score);
+
     //on vide le renderer
     clear_renderer(renderer);
     
     //application des textures dans le renderer
     apply_background(renderer, textures);
-    /* A COMPLETER */
 
-    //Applicaiton des textures du sprite dans le renderer
+    //Application des textures du sprite dans le renderer
     apply_sprite(renderer, textures->player, world->vaisseau);
 
-    //Applicaiton des textures de l'v_ennemi dans le renderer
+    //Application des textures de l'v_ennemi dans le renderer
     //apply_sprite(renderer, textures->v_ennemi, world->v_ennemi);
+    
+    //Application des textures pour des ennemis multiples
     apply_enemies(renderer,world,textures);
 
-    //Applicaiton des textures du missile dans le renderer
+    //Application des textures du missile dans le renderer
     apply_sprite(renderer, textures->missile, world->missile);
 
-    apply_text(renderer,10,10,25,50,score_str,textures->font);
+    //Application des textures sur la police d'écriture
+    apply_text(renderer,10,10,25,50, score_str,textures->font);
     
     // on met à jour l'écran
     update_screen(renderer);
@@ -73,18 +73,14 @@ void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite
         if (sprite->is_alive==1){
             apply_texture(texture, renderer, sprite->x, sprite->y);
         }
-        
     }
 }
-
 
 void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world){
     clean_data(world);
     clean_textures(textures);
     clean_sdl(renderer,window);
 }
-
-
 
 void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world){
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);

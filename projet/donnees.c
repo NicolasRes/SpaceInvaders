@@ -1,9 +1,7 @@
 #include"donnees.h"
 #include <stdlib.h>
-
 #include <stdio.h>
 #include <math.h>
-
 
 
 int generate_number (int a,int b ) {
@@ -55,17 +53,14 @@ void init_data(world_t * world){
     world->nb_v_out = 0;
     world->score = 0;
 
-
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
     print_sprite(world->vaisseau);
     
     //init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
-   
 
     init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,0);
 
     init_enemies(world);
-
 
     set_invisible(world->missile);
     
@@ -85,8 +80,6 @@ void clean_data(world_t *world){
     free(world->enemies);
 }
 
-
-
 int is_game_over(world_t *world){
     return world->gameover;
 }
@@ -103,7 +96,6 @@ void limite_ecran_joueur(world_t *world){
         world->vaisseau->x = SCREEN_WIDTH - world->vaisseau->w;
     }
 }
-
 
 void limite_ecran_ennemi(world_t *world){
 
@@ -128,7 +120,6 @@ void limite_ecran_missile(world_t * world){
     }
 }
 
-
 int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2) {
     
     float sp1_gauche = sp1->x;
@@ -143,9 +134,9 @@ int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2) {
 
     // chevauchement
     if (sp1_droite >= sp2_gauche && sp1_gauche <= sp2_droite && sp1_bas >= sp2_haut && sp1_haut <= sp2_bas) {
-        
         return 1;
     } 
+
     return 0;
     
 }
@@ -180,7 +171,6 @@ void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
         sp1->is_alive = 0;
         sp2->is_alive = 0;
-
     }
     
 }
@@ -191,10 +181,8 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
         sp1->is_alive = 0;
         sp2->is_alive = 0;
         set_invisible(sp1);
-        
         world->score+=1;
     }
-    
 }
 
 void update_enemies(world_t *world){
@@ -214,27 +202,25 @@ void afficher_score_pendantPartie(world_t * world,int vout,int score){
 void MessageVictoire(world_t * world){
 
     if (world->win==1){
+        printf("Vous avez abattu tous les ennemis ! Victoire !\n");
+        printf("Votre score est mutiplié par 2 ! Score : %d\n", world->score);
 
-        printf("Vous avez abattu tous les ennemis, vous avez gagnez!\n");
-        printf("Votre Score est mutiplié par 2, score : %d\n", world->score);
-
-    }else{
-        if(world->nb_v_out!=0){
-            printf("Vous n'avez ni gagné ni perdu, score: %d\n",world->score);
-        }else{
-            printf("Un ennemi vous a abattu, Score: %d\n",world->score);
+    }
+    else {
+        if(world->nb_v_out != 0) {
+            printf("Vous n'avez ni gagné ni perdu. Score : %d\n", world->score);
         }
-        
+        else {
+        printf("Un ennemi vous a abattu ! Score: %d\n",world->score);
+        }
     } 
-    
-
 }
 
 void compute_game(world_t *world){
 
     if (world->vaisseau->is_alive == 0){
         world->score =0;
-        world->gameover=1;  
+        world->gameover=1; 
     } 
 
     if(world->nb_v_out + world->score == NB_ENEMIES ){
@@ -243,7 +229,8 @@ void compute_game(world_t *world){
             world->win=1;
             world->gameover =1;
             
-        }else{ 
+        }
+        else {
             world->gameover =1;
         }   
     } 
@@ -267,15 +254,11 @@ void update_data(world_t *world){
     for (int i = 0; i < NB_ENEMIES; i++) {
         handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
         handle_sprites_collision_missile(world->missile,world->enemies[i],world);
-
-        compute_game(world);
-        
+        compute_game(world); 
     }
 
     afficher_score_pendantPartie(world,ancien_score_vaisseau,ancien_score_joueur);
 }
-
-
 
 void handle_events(SDL_Event *event,world_t *world){
     Uint8 *keystates;
