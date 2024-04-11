@@ -2,6 +2,7 @@
 #define __DONNEES__H__
 
 #include "SDL2/SDL.h"
+#include "sdl2-light.h"
 #include "constantes.h"
 /**
 *\brief structure pour représenter le vaisseau
@@ -37,6 +38,7 @@ struct world_s{
     sprite_t ** enemies;
     int nb_v_out;
     int  score;
+    int win;
 
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -129,5 +131,9 @@ int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2);
 int generate_number (int a,int b );
 
 void init_enemies(world_t *world);
+
+void MessageVictoire(world_t * world);
+
+void compute_game(world_t *world);
 
 #endif

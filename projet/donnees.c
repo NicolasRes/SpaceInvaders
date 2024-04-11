@@ -1,6 +1,6 @@
 #include"donnees.h"
 #include <stdlib.h>
-#include<time.h>
+
 #include <stdio.h>
 #include <math.h>
 
@@ -27,12 +27,10 @@ void init_enemies(world_t *world){
         world->enemies[i]= malloc(sizeof(sprite_t));
     }
     for (int i=0;i<NB_ENEMIES;i++){
-        init_sprite(world->enemies[i],generate_number(SHIP_SIZE,SCREEN_WIDTH-SHIP_SIZE/2),-SHIP_SIZE/2 - i * VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED,1);
+        init_sprite(world->enemies[i],generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE/2 - i * VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED,1);
     }
     
 }
-
-
 
 void set_visible (sprite_t * sprite) {
     sprite->is_visible = 1;
@@ -53,13 +51,12 @@ void print_sprite (sprite_t * sprite) {
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    //world->v_ennemi = malloc(sizeof(sprite_t));
     world->missile = malloc(sizeof(sprite_t));
     world->nb_v_out = 0;
     world->score = 0;
 
 
-    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = 5,1);
+    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
     print_sprite(world->vaisseau);
     
     //init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
@@ -74,6 +71,7 @@ void init_data(world_t * world){
     
     //on n'est pas à la fin du jeu
     world->gameover = 0;
+    world->win=0;
     
 }
 
@@ -117,13 +115,8 @@ void limite_ecran_ennemi(world_t *world){
                 world->enemies[i]->is_alive = 0;
                 world->nb_v_out += 1;
             }
-            
-            
         }
     }
-    
-
-
 }
 
 void limite_ecran_missile(world_t * world){
@@ -187,6 +180,7 @@ void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
         sp1->is_alive = 0;
         sp2->is_alive = 0;
+
     }
     
 }
@@ -205,35 +199,78 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
 
 void update_enemies(world_t *world){
     for(int i=0;i<NB_ENEMIES;i++){
-
         world->enemies[i]->y +=world->enemies[i]->v;
     }
+}
+
+void afficher_score_pendantPartie(world_t * world,int vout,int score){
+
+    if (world->nb_v_out!= vout || world->score!= score ){
+        printf("V out :%d\n", world->nb_v_out);
+        printf("Score :%d\n\n", world->score);
+    } 
+}
+
+void MessageVictoire(world_t * world){
+
+    if (world->win==1){
+
+        printf("Vous avez abattu tous les ennemis, vous avez gagnez!\n");
+        printf("Votre Score est mutiplié par 2, score : %d\n", world->score);
+
+    }else{
+        printf("Un ennemi vous a abattu, Score: %d\n",world->score);
+    } 
+    
 
 }
 
+void compute_game(world_t *world){
+
+    if (world->vaisseau->is_alive == 0){
+            
+        world->gameover=1;
+        
+    } 
+
+    if(world->nb_v_out + world->score == NB_ENEMIES ){
+        if(world->score==NB_ENEMIES){
+            world->score *=2;
+            world->win=1;
+            world->gameover =1;
+            
+        }else{
+            world->gameover =1;
+        }
+            
+    } 
+    
+}
+
+
 void update_data(world_t *world){
-    //world->v_ennemi->y += world->v_ennemi->v;
+    
     update_enemies(world);
     if(world->missile->is_visible == 1) {
         world->missile->y -= world->missile->v;
     }
 
+    int ancien_score_vaisseau= world->nb_v_out;
+    int ancien_score_joueur=world->score;
+
     limite_ecran_joueur(world);
     limite_ecran_ennemi(world);
     limite_ecran_missile(world);
-    
+
     for (int i = 0; i < NB_ENEMIES; i++) {
         handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
         handle_sprites_collision_missile(world->missile,world->enemies[i],world);
-       
+
+        compute_game(world);
+        
     }
 
-    if(world->nb_v_out+world->score == NB_ENEMIES ){
-        world->gameover =1;
-    }
-
-    printf("V out :%d\n", world->nb_v_out);
-    printf("Score :%d\n", world->score);
+    afficher_score_pendantPartie(world,ancien_score_vaisseau,ancien_score_joueur);
 }
 
 

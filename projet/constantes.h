@@ -30,18 +30,22 @@
 /**
 * \brief Vitesse de l'ennemi
 */
-#define ENEMY_SPEED 2
+#define ENEMY_SPEED 1
+
+#define VAISSEAU_SPEED 5
 
 /**
 * \brief Vitesse du missile
 */
-#define MISSILE_SPEED 5
+#define MISSILE_SPEED 4
 
 /**
 * \brief nombre d'ennemis
 */
-#define NB_ENEMIES 5
+#define NB_ENEMIES 3
 
 #define VERTICAL_DIST 2*SHIP_SIZE
+
+#define TEMPS 2000
 
 #endif

@@ -13,6 +13,7 @@
 #include "sdl2-light.h"
 #include "graphique.h"
 #include "donnees.h"
+#include<time.h>
 
 
 /**
@@ -27,6 +28,7 @@ int main( int argc, char* args[] ){
     SDL_Renderer *renderer;
     SDL_Window *window;
 
+    srand (time (NULL ) ) ;
     //initialisation du jeu
     init(&window,&renderer,&textures,&world);
     
@@ -42,9 +44,8 @@ int main( int argc, char* args[] ){
         // pause de 10 ms pour controler la vitesse de rafraichissement
         pause(10);
     }
-    printf("%d", world.score);
-    
-    printf("%d", world.nb_v_out);
+    MessageVictoire(&world);
+    pause(TEMPS);
     //nettoyage final
     clean(window,renderer,&textures,&world);
     

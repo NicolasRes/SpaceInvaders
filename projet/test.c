@@ -1,4 +1,3 @@
-
 #include"donnees.h"
 #include "constantes.h"
 #include <stdlib.h>
@@ -172,7 +171,7 @@ void test_handle_sprites_collision() {
     init_sprite(sprite1, 50, 50, 20, 20, 0, 1);
     init_sprite(sprite2, 55, 55, 20, 20, 0, 1);
 
-    handle_sprites_collision(sprite1, sprite2);
+    test_sprites_collide_cercle(sprite1, sprite2);
 
     if (sprite1->is_alive == 0 && sprite2->is_alive == 0) {
         printf("Il y a eu collision -> suppression sprite !\n");
