@@ -49,7 +49,7 @@ void init_data(world_t * world){
     world->missile = malloc(sizeof(sprite_t));
     world->nb_v_out = 0;
     world->score = 0;
-
+    world->gold = 0;
     world->gameover = 0;
     world->win=0;
     world->vague=1;
@@ -174,6 +174,8 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
         sp2->is_alive = 0;
         set_invisible(sp1);
         world->score+=1;
+        world->gold+=rand()%(10-1)+1;
+        printf("Gold : %d\n", world->gold);
         world->score_manche+=1;
     }
 }
@@ -193,7 +195,6 @@ void afficher_score_pendantPartie(world_t * world,int vout,int score){
 }
 
 void MessageVictoire(world_t * world){
-
     printf("Un ennemi vous a abattu ! Score final: %d\n",world->score);    
 }
 

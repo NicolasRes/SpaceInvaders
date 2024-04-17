@@ -57,6 +57,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     
     char * score_str = int_to_string(world->score);
     char * vague_str = int_to_string(world->vague);
+    char * gold_str = int_to_string(world->gold);
 
     clear_renderer(renderer);
     
@@ -71,16 +72,19 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     SDL_Color color = { 255, 0, 255 };
 
     
-    apply_text(renderer,10,10,6*14,50, "Vague: ",textures->font,color);
+    apply_text(renderer,10,10,6*14,50, "Vague ",textures->font,color);
     apply_text(renderer,100,10,25,50, vague_str,textures->font,color);
 
     apply_text(renderer,10,60,6*14,50, "Score: ",textures->font,color);
     apply_text(renderer,100,60,25,50, score_str,textures->font,color);
+
+    apply_text(renderer,SCREEN_WIDTH - 10*14,60,6*14,50, "Gold: ",textures->font,color);
+    apply_text(renderer,SCREEN_WIDTH - 4*14,60,50,50, gold_str,textures->font,color);
     
     if (world->attente==1){
         world->attente=0;
         
-        apply_text(renderer, SCREEN_WIDTH / 2 - ((5 * 25) / 2), SCREEN_HEIGHT / 2 - 50, 5 * 25, 100, "Vague : ", textures->font, WHITE);   
+        apply_text(renderer, SCREEN_WIDTH / 2 - ((5 * 25) / 2), SCREEN_HEIGHT / 2 - 50, 5 * 25, 100, "Vague ", textures->font, WHITE);   
         apply_text(renderer, SCREEN_WIDTH / 2 + ((5 * 25) / 2) + 10, SCREEN_HEIGHT / 2 - 50, 25, 100, vague_str, textures->font, WHITE);
 
         update_screen(renderer);

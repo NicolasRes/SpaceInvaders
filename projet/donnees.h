@@ -46,6 +46,7 @@ struct world_s{
     int vitesse_enemies;
     int score_manche;
     int attente;
+    int gold;
 };
 
 /**
