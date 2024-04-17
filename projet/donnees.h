@@ -38,10 +38,14 @@ struct world_s{
     sprite_t * missile;
     sprite_t ** enemies;
     int nb_v_out;
-    int  score;
+    int score;
     int win;
-    int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
-
+    int gameover; 
+    int vague;
+    int nb_enemies_current;
+    int vitesse_enemies;
+    int score_manche;
+    int attente;
 };
 
 /**

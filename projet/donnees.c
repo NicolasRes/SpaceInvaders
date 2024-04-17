@@ -18,16 +18,13 @@ void init_sprite (sprite_t * sprite, int x, int y, int w, int h, int v, int alv)
     sprite->is_alive=alv;
 }
 
-void init_enemies(world_t *world){
-   
-    world->enemies=malloc(NB_ENEMIES*sizeof(sprite_t*));
-    for(int i=0;i<NB_ENEMIES;i++){
-        world->enemies[i]= malloc(sizeof(sprite_t));
+void init_enemies(world_t *world) {
+    world->enemies = malloc(world->nb_enemies_current * sizeof(sprite_t*));
+    for(int i = 0; i < world->nb_enemies_current; i++) {
+        world->enemies[i] = malloc(sizeof(sprite_t)); 
+        //ajout -20 en y sinon apparait pendant ecran entre vague
+        init_sprite(world->enemies[i], generate_number(0, SCREEN_WIDTH - SHIP_SIZE), -SHIP_SIZE / 2 - i * VERTICAL_DIST -50, SHIP_SIZE, SHIP_SIZE, world->vitesse_enemies, 1);
     }
-    for (int i=0;i<NB_ENEMIES;i++){
-        init_sprite(world->enemies[i],generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE/2 - i * VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED,1);
-    }
-    
 }
 
 void set_visible (sprite_t * sprite) {
@@ -53,28 +50,27 @@ void init_data(world_t * world){
     world->nb_v_out = 0;
     world->score = 0;
 
+    world->gameover = 0;
+    world->win=0;
+    world->vague=1;
+    world->nb_enemies_current = NB_ENEMIES;
+    world->vitesse_enemies= ENEMY_SPEED;
+    world->score_manche=0;
+
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
-    print_sprite(world->vaisseau);
-    
-    //init_sprite (world->v_ennemi, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), (SHIP_SIZE/2), SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED,1);
 
     init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,0);
 
     init_enemies(world);
 
     set_invisible(world->missile);
-    
-    //on n'est pas à la fin du jeu
-    world->gameover = 0;
-    world->win=0;
-    
+   
 }
 
 void clean_data(world_t *world){
     free(world->vaisseau);
-    //free(world->v_ennemi);
     free(world->missile);
-    for (int i=0;i<NB_ENEMIES;i++){
+    for (int i=0;i<world->nb_enemies_current;i++){
         (world->enemies[i]);
     }
     free(world->enemies);
@@ -101,7 +97,7 @@ void limite_ecran_ennemi(world_t *world){
 
     // Limite basse
 
-    for (int i = 0; i < NB_ENEMIES; i++) {
+    for (int i = 0; i < world->nb_enemies_current; i++) {
          if (world->enemies[i]->y > SCREEN_HEIGHT) {
             if (world->enemies[i]->is_alive == 1) {
                 world->enemies[i]->is_alive = 0;
@@ -157,14 +153,11 @@ int sprites_collide_cercle(sprite_t *sp1, sprite_t *sp2) {
         float rayon_sp1 = sp1->w / 2.0;
         float rayon_sp2 = sp2->w / 2.0;
         if (distance_centres <= rayon_sp1 + rayon_sp2) {
-            printf("collision\n");
             return 1; 
         } 
     }
-    
     return 0;
 }
- 
 
 void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     // Vérifier si les deux sprites sont encore visibles, en vie et en collision
@@ -172,7 +165,6 @@ void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
         sp1->is_alive = 0;
         sp2->is_alive = 0;
     }
-    
 }
 
 void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *world) {
@@ -182,11 +174,12 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
         sp2->is_alive = 0;
         set_invisible(sp1);
         world->score+=1;
+        world->score_manche+=1;
     }
 }
 
 void update_enemies(world_t *world){
-    for(int i=0;i<NB_ENEMIES;i++){
+    for(int i=0;i<world->nb_enemies_current;i++){
         world->enemies[i]->y +=world->enemies[i]->v;
     }
 }
@@ -201,38 +194,38 @@ void afficher_score_pendantPartie(world_t * world,int vout,int score){
 
 void MessageVictoire(world_t * world){
 
-    if (world->win==1){
-        printf("Vous avez abattu tous les ennemis ! Victoire !\n");
-        printf("Votre score est mutiplié par 2 ! Score : %d\n", world->score);
-
-    }
-    else {
-        if(world->nb_v_out != 0) {
-            printf("Vous n'avez ni gagné ni perdu. Score : %d\n", world->score);
-        }
-        else {
-        printf("Un ennemi vous a abattu ! Score: %d\n",world->score);
-        }
-    } 
+    printf("Un ennemi vous a abattu ! Score final: %d\n",world->score);    
 }
 
-void compute_game(world_t *world){
 
-    if (world->vaisseau->is_alive == 0){
-        world->score =0;
-        world->gameover=1; 
+
+void compute_game(world_t *world) {
+
+    if (world->vaisseau->is_alive == 0) {
+        world->gameover = 1;
     } 
 
-    if(world->nb_v_out + world->score == NB_ENEMIES ){
-        if(world->score==NB_ENEMIES){
-            world->score *=2;
-            world->win=1;
-            world->gameover =1;
-            
+    if (world->nb_v_out + world->score_manche == world->nb_enemies_current) {
+
+        if (world->nb_v_out==0){
+            printf("Vous avez abattu tous les ennemies !\n");
+            printf("Score Multiple par 2!!\n");
+            world->score*=2;
         }
-        else {
-            world->gameover =1;
-        }   
+        
+        world->attente=1;
+
+        printf("Fin de la vague %d\n", world->vague);
+        world->vague += 1;
+        world->nb_v_out = 0;
+        world->nb_enemies_current += 2;
+        world->score_manche = 0;
+        world->vitesse_enemies += 1;
+        world->vaisseau->v+=1;
+        world->missile->v+=1;
+        
+        free(world->enemies);
+        init_enemies(world);
     } 
 }
 
@@ -251,53 +244,43 @@ void update_data(world_t *world){
     limite_ecran_ennemi(world);
     limite_ecran_missile(world);
 
-    for (int i = 0; i < NB_ENEMIES; i++) {
+    for (int i = 0; i < world->nb_enemies_current; i++) {
         handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
         handle_sprites_collision_missile(world->missile,world->enemies[i],world);
         compute_game(world); 
     }
 
-    afficher_score_pendantPartie(world,ancien_score_vaisseau,ancien_score_joueur);
 }
 
-void handle_events(SDL_Event *event,world_t *world){
-    Uint8 *keystates;
-    while( SDL_PollEvent( event ) ) {
+void handle_events(SDL_Event *event, world_t *world) {
+    const Uint8 *keystates;
+    keystates = SDL_GetKeyboardState(NULL);
+    
+    if (keystates[SDL_SCANCODE_ESCAPE]) {
         
-        //Si l'utilisateur a cliqué sur le X de la fenêtre
-        if( event->type == SDL_QUIT ) {
-            //On indique la fin du jeu
+        world->gameover = 1;
+    }
+    
+    if (keystates[SDL_SCANCODE_D]) {
+        world->vaisseau->x += world->vaisseau->v;
+    }
+    
+    if (keystates[SDL_SCANCODE_A]) {
+        world->vaisseau->x -= world->vaisseau->v;
+    }
+
+    if (keystates[SDL_SCANCODE_SPACE] && world->vaisseau->is_visible && world->vaisseau->is_alive && world->missile->is_alive == 0 && world->missile->is_visible == 0) {
+        
+        world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
+        world->missile->y = world->vaisseau->y - MISSILE_SIZE;
+        world->missile->is_visible = 1;
+        world->missile->is_alive = 1;
+    }
+
+    while (SDL_PollEvent(event)) {
+        if (event->type == SDL_QUIT) {
+            
             world->gameover = 1;
-        }
-
-        //Si l'utilisateur a cliqué sur le X de la fenêtre
-        if( event->type == SDL_KEYDOWN ) {
-            if(event->key.keysym.sym == SDLK_ESCAPE){
-                //si la touche appuyée est 'ESCAPE'
-                world->gameover = 1;
-            }
-        }
-
-        if(event->type == SDL_KEYDOWN){
-            //si la touche appuyée est 'D'
-            if(event->key.keysym.sym == SDLK_d){
-                world->vaisseau->x += world->vaisseau->v;
-            }
-        }
-
-        if(event->type == SDL_KEYDOWN){
-            //si la touche appuyée est 'G'
-            if(event->key.keysym.sym == SDLK_q){
-                world->vaisseau->x -= world->vaisseau->v;
-            }
-        }
-
-         // Si la touche appuyée est 'ESPACE' et que le vaisseau est visible
-        if (event->key.keysym.sym == SDLK_SPACE && world->vaisseau->is_visible && world->vaisseau->is_alive && world->missile->is_alive==0 &&  world->missile->is_visible==0){
-            world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
-            world->missile->y = world->vaisseau->y - MISSILE_SIZE;
-            world->missile->is_visible = 1;
-            world->missile->is_alive=1;
         }
     }
 }

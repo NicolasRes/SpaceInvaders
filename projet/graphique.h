@@ -1,3 +1,8 @@
+/**
+ * @file graphique.h
+ * @brief Définition des fonctions relatives à la gestion graphique du jeu.
+ */
+
 #ifndef __GRAPHIQUE__H__
 #define __GRAPHIQUE__H__
 
@@ -6,105 +11,107 @@
 #include "constantes.h"
 #include "sdl2-ttf-light.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include "acceuil.h"
 
 /**
- * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
-*/
-
-struct textures_s{
-    SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    SDL_Texture* player;
-    SDL_Texture* v_ennemi;
-    SDL_Texture* missile;
-    TTF_Font * font;
-};
-
-/**
- * \brief Type qui correspond aux textures du jeu
-*/
-
-typedef struct textures_s textures_t;
+ * @brief Structure pour stocker les textures utilisées dans le jeu.
+ */
+typedef struct {
+    SDL_Texture *background; /**< Texture du fond d'écran */
+    SDL_Texture *player; /**< Texture du joueur */
+    SDL_Texture *v_ennemi; /**< Texture de l'ennemi */
+    SDL_Texture *missile; /**< Texture du missile */
+    TTF_Font *font; /**< Police de caractères */
+} textures_t;
 
 /**
- * \brief La fonction nettoie les textures
- * \param textures les textures
-*/
-
+ * @brief Libère la mémoire allouée pour les textures.
+ *
+ * @param textures Pointeur vers la structure de textures.
+ */
 void clean_textures(textures_t *textures);
 
 /**
- * \brief La fonction initialise les texures
- * \param screen la surface correspondant à l'écran de jeu
- * \param textures les textures du jeu
-*/
-void  init_textures(SDL_Renderer *renderer, textures_t *textures);
+ * @brief Initialise les textures du jeu.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures à initialiser.
+ */
+void init_textures(SDL_Renderer *renderer, textures_t *textures);
 
 /**
- * \brief La fonction applique la texture du fond sur le renderer lié à l'écran de jeu
- * \param renderer le renderer
- * \param textures les textures du jeu
-*/
+ * @brief Change la taille d'une texture.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param texture_ptr Pointeur vers la texture à redimensionner.
+ * @param textures Pointeur vers la structure de textures.
+ * @param longueur La nouvelle longueur de la texture.
+ * @param largeur La nouvelle largeur de la texture.
+ */
+void Changer_taille_image(SDL_Renderer *renderer, SDL_Texture **texture_ptr, textures_t *textures, int longueur, int largeur);
 
+/**
+ * @brief Applique le fond d'écran.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+ */
 void apply_background(SDL_Renderer *renderer, textures_t *textures);
 
 /**
- * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde
- * \param renderer la surface de l'écran de jeu
- * \param world les données du monde
- * \param textures les textures
+ * @brief Applique les textures des ennemis.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param world Pointeur vers la structure du monde du jeu.
+ * @param textures Pointeur vers la structure de textures.
  */
+void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures);
 
 /**
- * \brief Applique la texture des ennemis sur le renderer
- * \param renderer la surface de l'écran dee jeu
- * \param world les données du monde
- * \param textures les textures
-*/
-void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures)
+ * @brief Convertit un entier en chaîne de caractères.
+ *
+ * @param value L'entier à convertir.
+ * @return La chaîne de caractères représentant l'entier.
+ */
+char* int_to_string (int value);
 
 /**
- * \brief Transforme un entier en chaine de caractères
- * \param value La valleur de l'entier à transformer (en base 10)
-*/
-char* int_to_string (int value)
-
-/**
-* \brief fonction qui nettoie le jeu: nettoyage de la partie graphique (SDL), nettoyage des textures, nettoyage des données
-* \param window la fenêtre du jeu
-* \param renderer le renderer
-* \param textures les textures
-* \param world le monde
-*/
+ * @brief Rafraîchit l'affichage graphique du jeu.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param world Pointeur vers la structure du monde du jeu.
+ * @param textures Pointeur vers la structure de textures.
+ */
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures);
 
 /**
- * \brief fonction qui initialise le jeu: initialisation de la partie graphique (SDL), chargement des textures, initialisation des données
- * \param renderer le renderer
- * \param textures les textures
- * \param sprite le sprite qu el'on doit appliquer
+ * @brief Applique la texture d'un sprite.
+ *
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param texture Pointeur vers la texture du sprite.
+ * @param sprite Pointeur vers la structure du sprite.
  */
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite);
 
 /**
- * \brief Fonction qui nettoie les textures / données du jeu
- * \param window La fenêtre de jeu
- * \param renderer Le renderer
- * \param textures Les textures du jeu
- * \param world Les données du jeu
-*/
+ * @brief Libère la mémoire allouée pour les données du jeu, les textures et ferme les fenêtres.
+ *
+ * @param window Pointeur vers la fenêtre du jeu.
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+ * @param world Pointeur vers la structure du monde du jeu.
+ */
 void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world);
 
 /**
- * \brief fonction qui initialise le jeu: initialisation de la partie graphique (SDL), chargement des textures, initialisation des données
- * \param window la fenêtre du jeu
- * \param renderer le renderer
- * \param textures les textures
- * \param wordl le monde
+ * @brief Initialise les composants nécessaires au démarrage du jeu.
+ *
+ * @param window Pointeur vers la fenêtre du jeu.
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+ * @param world Pointeur vers la structure du monde du jeu.
  */
 void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world);
-
-
-
-char* int_to_string(int value);
 
 #endif

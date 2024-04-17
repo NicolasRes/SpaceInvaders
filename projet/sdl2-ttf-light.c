@@ -1,4 +1,5 @@
 #include "sdl2-ttf-light.h"
+#include <stdio.h>
 
 
 
@@ -41,16 +42,13 @@ TTF_Font * load_font(const char *path, int font_size){
 */
 
 
-void apply_text(SDL_Renderer *renderer,int x, int y, int w, int h, const char *text, TTF_Font *font){
-    SDL_Color color = { 255, 0, 255 };
-    
+void apply_text(SDL_Renderer *renderer, int x, int y, int w, int h, const char *text, TTF_Font *font, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
-    //printf("FFFFF\n");
-     
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_Rect dstrect2 = {x, y, w, h};
     SDL_RenderCopy(renderer, texture, NULL, &dstrect2);
-    
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
 void clean_font(TTF_Font * font){

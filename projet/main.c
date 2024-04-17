@@ -12,6 +12,7 @@
 #include "graphique.h"
 #include "donnees.h"
 #include <time.h>
+#include "acceuil.h"
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu
@@ -28,7 +29,7 @@ int main( int argc, char* args[] ){
     srand(time(NULL)) ;
     //initialisation du jeu
     init(&window,&renderer,&textures,&world);
-    
+    printf("--------------------Debut Partie--------------------\n");
     while(!is_game_over(&world)){ //tant que le jeu n'est pas fini
         
         //gestion des évènements
