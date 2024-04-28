@@ -43,6 +43,7 @@ int main( int argc, char* args[] ){
         pause(17);
     }
     MessageVictoire(&world);
+    GameOver(renderer,&world,&textures);
     pause(TEMPS);
     //nettoyage final
     clean(window,renderer,&textures,&world);

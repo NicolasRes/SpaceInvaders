@@ -62,15 +62,11 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     clear_renderer(renderer);
     
     apply_background(renderer, textures);
-
     apply_sprite(renderer, textures->player, world->vaisseau);
-    
     apply_enemies(renderer,world,textures);
-
     apply_sprite(renderer, textures->missile, world->missile);
     
     SDL_Color color = { 255, 0, 255 };
-
     
     apply_text(renderer,10,10,6*14,50, "Vague ",textures->font,color);
     apply_text(renderer,100,10,25,50, vague_str,textures->font,color);
@@ -114,4 +110,23 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
     Creer_Acceuil(*window, *renderer);
     init_data(world);
     init_textures(*renderer,textures);
+}
+
+
+void GameOver(SDL_Renderer *renderer, world_t *world, textures_t *textures) {
+
+    // récup taille qui faut
+    int text_width, text_height;
+    TTF_SizeText(textures->font, "GAME OVER", &text_width, &text_height);
+
+    // afficher en plus grand
+    text_width*= 3   ;
+    text_height*= 3  ;
+    // Coordonnées pour centrer le texte
+    int text_x = (SCREEN_WIDTH - text_width) / 2;
+    int text_y = (SCREEN_HEIGHT - text_height) / 2;
+
+    // Appliquer le texte au centre de l'écran
+    apply_text(renderer, text_x, text_y, text_width, text_height, "GAME OVER", textures->font, WHITE);
+    update_screen(renderer);
 }
