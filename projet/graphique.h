@@ -118,4 +118,7 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
 
 void GameOver(SDL_Renderer *renderer, world_t *world,textures_t *textures);
 
+void AffichageValeur(SDL_Renderer *renderer, world_t *world,textures_t *textures,SDL_Color color,char * score_str,char * vague_str,char * gold_str);
+void AffichageEntreVague(SDL_Renderer *renderer, world_t *world,textures_t *textures,char * vague_str);
+
 #endif
