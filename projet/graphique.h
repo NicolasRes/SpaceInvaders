@@ -12,7 +12,7 @@
 #include "sdl2-ttf-light.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "acceuil.h"
+#include "accueil.h"
 
 /**
  * @brief Structure pour stocker les textures utilisées dans le jeu.
@@ -60,30 +60,12 @@ void Changer_taille_image(SDL_Renderer *renderer, SDL_Texture **texture_ptr, tex
 void apply_background(SDL_Renderer *renderer, textures_t *textures);
 
 /**
- * @brief Applique les textures des ennemis.
- *
- * @param renderer Pointeur vers le renderer utilisé.
- * @param world Pointeur vers la structure du monde du jeu.
- * @param textures Pointeur vers la structure de textures.
- */
-void apply_enemies(SDL_Renderer *renderer,world_t * world,textures_t *textures);
-
-/**
  * @brief Convertit un entier en chaîne de caractères.
  *
  * @param value L'entier à convertir.
  * @return La chaîne de caractères représentant l'entier.
  */
 char* int_to_string (int value);
-
-/**
- * @brief Rafraîchit l'affichage graphique du jeu.
- *
- * @param renderer Pointeur vers le renderer utilisé.
- * @param world Pointeur vers la structure du monde du jeu.
- * @param textures Pointeur vers la structure de textures.
- */
-void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures);
 
 /**
  * @brief Applique la texture d'un sprite.
@@ -93,25 +75,5 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
  * @param sprite Pointeur vers la structure du sprite.
  */
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite);
-
-/**
- * @brief Libère la mémoire allouée pour les données du jeu, les textures et ferme les fenêtres.
- *
- * @param window Pointeur vers la fenêtre du jeu.
- * @param renderer Pointeur vers le renderer utilisé.
- * @param textures Pointeur vers la structure de textures.
- * @param world Pointeur vers la structure du monde du jeu.
- */
-void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world);
-
-/**
- * @brief Initialise les composants nécessaires au démarrage du jeu.
- *
- * @param window Pointeur vers la fenêtre du jeu.
- * @param renderer Pointeur vers le renderer utilisé.
- * @param textures Pointeur vers la structure de textures.
- * @param world Pointeur vers la structure du monde du jeu.
- */
-void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world);
 
 #endif

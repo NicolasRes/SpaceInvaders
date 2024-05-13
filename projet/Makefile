@@ -1,8 +1,8 @@
 CFLAGS = -O3 `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs` -lSDL2_ttf -lm
 
-INC = sdl2-light.h constantes.h donnes.h graphique.h sdl2-ttf-light.h acceuil.h
-SRC = main.c sdl2-light.c donnees.c graphique.c sdl2-ttf-light.c acceuil.c
+INC = sdl2-light.h constantes.h donnees.h graphique.h sdl2-ttf-light.h accueil.h controler.h
+SRC = main.c sdl2-light.c donnees.c graphique.c sdl2-ttf-light.c accueil.c controler.c
 OBJ = $(SRC:%.c=%.o)
 
 PROG = spacebattle

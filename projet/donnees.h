@@ -33,20 +33,19 @@ typedef struct sprite_s sprite_t;
 
 struct world_s{
     
-    sprite_t * vaisseau;
-    //sprite_t * v_ennemi;
+    sprite_t * vaisseau; // structure
     sprite_t * missile;
     sprite_t ** enemies;
-    int nb_v_out;
-    int score;
-    int win;
-    int gameover; 
-    int vague;
-    int nb_enemies_current;
+    int nb_v_out; // nombre de vaisseaux enemies sortient
+    int score; // score du joueur
+    int win; // etat pour voir si le joueur a tué tous les enemies de la vague
+    int gameover; // etat pour dire si le joueur a été touché
+    int vague;// numero de la vague
+    int nb_enemies_current;// nombre d'enemies par vague
     int vitesse_enemies;
     int score_manche;
-    int attente;
-    int gold;
+    int attente;// etat pour afficher numéro vague (petite pause)
+    int gold;// ajout argent pour futur achat d'amélioration
 };
 
 /**
@@ -185,5 +184,52 @@ void compute_game(world_t *world);
  */
 
 void update_data(world_t *world);
+
+/**
+ * \brief La fonction met à jour les données par defaut du monde 
+ * \param world données du monde
+ */
+void Pardefaut(world_t* world);
+
+/**
+ * \brief La fonction met game over à 1
+ * \param world données du monde
+ */
+void Verif_Gameover(world_t *world);
+
+/**
+ * @brief Fonction qui vérifie si tous les ennemis ont été abattus dans la manche. Score x2 si c'est le cas
+ * 
+ * @param world données du monde
+ */
+void Verif_TousAbattus(world_t *world);
+
+/**
+ * @brief Fonction qui met à jour les données du jeu d'une vague à l'autre
+ * 
+ * @param world données du monde
+ */
+void MiseAJour_Vague(world_t *world);
+
+/**
+ * @brief Fonction qui vérifie si une vague est terminée
+ * 
+ * @param world données du monde
+ */
+void Verif_FinDevague(world_t *world);
+
+/**
+ * @brief Fonction qui met à jour la position des missiles tirés par le joueur
+ * 
+ * @param world données du monde
+ */
+void update_missile(world_t *world);
+
+/**
+ * @brief Fonction qui vérifie les collisions entre les vaisseaux et les missiles
+ * 
+ * @param world données du monde
+ */
+void Verif_Collision(world_t *world);
 
 #endif

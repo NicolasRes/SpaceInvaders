@@ -1,4 +1,4 @@
-#include"donnees.h"
+#include "donnees.h"
 #include "constantes.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -202,10 +202,8 @@ void test_init_enemies(){
 void test_update_enemies(){
 
     world_t *world = malloc(sizeof(world_t));
-    
-    init_enemies(world);
     printf("Avant fonction update..\n\n");
-    for(int j=0;j<NB_ENEMIES;j++){
+    for(int j=0;j<world->nb_enemies_current ;j++){
         print_sprite(world->enemies[j]);
         printf("\n");
     }
@@ -213,17 +211,16 @@ void test_update_enemies(){
     update_enemies(world);
 
     printf("Après fonction update..\n\n");
-    for(int j=0;j<NB_ENEMIES;j++){
+    for(int j=0;j<world->nb_enemies_current ;j++){
         print_sprite(world->enemies[j]);
         printf("\n");
     }
     
-    for (int i=0;i<NB_ENEMIES;i++){
+    for (int i=0;i<world->nb_enemies_current ;i++){
         free(world->enemies[i]);
     }
 
     free(world->enemies);
-    free(world);
 }
 
 #undef main
@@ -231,10 +228,10 @@ void test_update_enemies(){
 
 int main( int argc, char* args[] ){
 
-    //test_init_sprite();
+    test_init_sprite();
     //test_bordure();
     //test_sprites_collide_cercle();
+    //test_update_enemies();
     //test_handle_sprites_collision();
     //test_init_enemies();
-    test_update_enemies();
 }

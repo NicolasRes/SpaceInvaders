@@ -1,4 +1,4 @@
-#include "acceuil.h"
+#include "accueil.h"
 
 int Passage_bouton(SDL_EventType event_type, SDL_Event event, int button_x, int button_y, int largeur, int hauteur) {
     int mouseX, mouseY;
@@ -41,7 +41,7 @@ void quitter_application(SDL_Window *window, SDL_Renderer *renderer) {
 }
 
 
-void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer) {
+void Creer_accueil(SDL_Window *window, SDL_Renderer *renderer) {
     
     SDL_Texture *background_texture =charger_background(renderer);
     SDL_RenderCopy(renderer, background_texture, NULL, NULL);
@@ -100,5 +100,3 @@ void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer) {
     clear_renderer(renderer);
     update_screen(renderer);
 }
-
-

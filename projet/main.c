@@ -1,6 +1,6 @@
 /**
  * \file main.c
- * \brief Programme principal initial du niveau 2
+ * \brief Programme principal
  * \author  Mathias et Nicolas 
  * \version 1.0
  * 
@@ -11,8 +11,9 @@
 #include "sdl2-light.h"
 #include "graphique.h"
 #include "donnees.h"
+#include "controler.h"
 #include <time.h>
-#include "acceuil.h"
+#include "accueil.h"
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu
@@ -43,6 +44,7 @@ int main( int argc, char* args[] ){
         pause(17);
     }
     MessageVictoire(&world);
+    GameOver(renderer,&world,&textures);
     pause(TEMPS);
     //nettoyage final
     clean(window,renderer,&textures,&world);
