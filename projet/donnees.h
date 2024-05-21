@@ -5,7 +5,7 @@
 #include "sdl2-light.h"
 #include "constantes.h"
 
-/*
+/**
 *\brief structure pour représenter le vaisseau
 *\a x Horizontal
 *\a y Vertical
@@ -29,6 +29,14 @@ typedef struct sprite_s sprite_t;
 
 /**
  * \brief Représentation du monde du jeu
+ * \a nb_v_out nombre de vaisseaux enemies sortient
+ * \a score score du joueur
+ * \a win etat pour voir si le joueur a tué tous les enemies de la vague
+ * \a gameover etat pour dire si le joueur a été touché nombre de vaisseaux enemies sortient
+ * \a 
+ * \a
+ * \a
+ * 
 */
 
 struct world_s{
@@ -36,10 +44,10 @@ struct world_s{
     sprite_t * vaisseau; // structure
     sprite_t * missile;
     sprite_t ** enemies;
-    int nb_v_out; // nombre de vaisseaux enemies sortient
-    int score; // score du joueur
-    int win; // etat pour voir si le joueur a tué tous les enemies de la vague
-    int gameover; // etat pour dire si le joueur a été touché
+    int nb_v_out; 
+    int score; // 
+    int win; // 
+    int gameover; // 
     int vague;// numero de la vague
     int nb_enemies_current;// nombre d'enemies par vague
     int vitesse_enemies;
@@ -198,38 +206,36 @@ void Pardefaut(world_t* world);
 void Verif_Gameover(world_t *world);
 
 /**
- * @brief Fonction qui vérifie si tous les ennemis ont été abattus dans la manche. Score x2 si c'est le cas
- * 
- * @param world données du monde
+ * \brief La fonction verifie si tous les enemies de la vague sont morts
+ * \param world données du monde
  */
 void Verif_TousAbattus(world_t *world);
 
 /**
- * @brief Fonction qui met à jour les données du jeu d'une vague à l'autre
- * 
- * @param world données du monde
+ * \brief La fonction initialise la vague suivante
+ * \param world données du monde
  */
 void MiseAJour_Vague(world_t *world);
 
 /**
- * @brief Fonction qui vérifie si une vague est terminée
- * 
- * @param world données du monde
+ * \brief La fonction gère déroulement des vagues
+ * \param world données du monde
  */
 void Verif_FinDevague(world_t *world);
 
 /**
- * @brief Fonction qui met à jour la position des missiles tirés par le joueur
- * 
- * @param world données du monde
+ * \brief La fonction qui fait avancer le missile
+ * \param world données du monde
  */
+
 void update_missile(world_t *world);
 
+
 /**
- * @brief Fonction qui vérifie les collisions entre les vaisseaux et les missiles
- * 
- * @param world données du monde
+ * \brief La fonction qui gère les collisions enemies avec missile ou joueur
+ * \param world données du monde
  */
 void Verif_Collision(world_t *world);
+
 
 #endif

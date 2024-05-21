@@ -64,7 +64,7 @@ void init_data(world_t * world){
     Pardefaut(world);
 
     //init joueur
-    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT-(5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
+    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
     //init missile
     init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,0);
     //init enemies
@@ -170,7 +170,7 @@ void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     }
 }
 
-void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2, world_t *world) {
+void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *world) {
     // Vérifier si les deux sprites sont encore visibles, en vie et en collision
     if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
         sp1->is_alive = 0;
@@ -227,6 +227,7 @@ void MiseAJour_Vague(world_t *world){
     world->missile->v+=1;
         
 }
+
 
 void Verif_FinDevague(world_t *world) {
 
@@ -299,7 +300,7 @@ void handle_events(SDL_Event *event, world_t *world) {
         world->vaisseau->x += world->vaisseau->v;
     }
     //déplacement vers gauche
-    if (keystates[SDL_SCANCODE_A]) {    // Interprétré en Qwerty, on se déplace donc avec A en Azerty
+    if (keystates[SDL_SCANCODE_Q]) {
         world->vaisseau->x -= world->vaisseau->v;
     }
 

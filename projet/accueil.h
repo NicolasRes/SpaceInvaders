@@ -1,10 +1,10 @@
 /**
- * @file accueil.h
+ * @file acceuil.h
  * @brief Définition des fonctions relatives à l'écran d'accueil du jeu.
  */
 
-#ifndef ACCUEIL_H
-#define ACCUEIL_H
+#ifndef ACCEUIL_H
+#define ACCEUIL_H
 
 #include "sdl2-light.h"
 #include "constantes.h"
@@ -18,7 +18,7 @@
  * @param window Pointeur vers la fenêtre du jeu.
  * @param renderer Pointeur vers le renderer utilisé pour dessiner sur la fenêtre.
  */
-void Creer_accueil(SDL_Window *window, SDL_Renderer *renderer);
+void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer);
 
 /**
  * @brief Charge la police de caractères utilisée pour l'écran d'accueil.

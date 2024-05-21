@@ -1,6 +1,6 @@
 /**
  * \file main.c
- * \brief Programme principal
+ * \brief Programme principal initial du niveau 2
  * \author  Mathias et Nicolas 
  * \version 1.0
  * 
@@ -11,7 +11,6 @@
 #include "sdl2-light.h"
 #include "graphique.h"
 #include "donnees.h"
-#include "controler.h"
 #include <time.h>
 #include "accueil.h"
 

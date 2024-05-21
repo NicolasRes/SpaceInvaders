@@ -1,28 +1,26 @@
-CFLAGS =  -O3 -Dmain=SDL_main
-LDFLAGS = -lm -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
-SDL2_INCLUDE_DIR = C:/SDL2-2.0.12/x86_64-w64-mingw32/include/
-SDL2_LIBRARIES_DIR = C:/SDL2-2.0.12/x86_64-w64-mingw32/lib
+CFLAGS = -O3 `sdl2-config --cflags`
+LDFLAGS = `sdl2-config --libs` -lSDL2_ttf -lm
 
-INC = sdl2-light.h constantes.h donnees.h graphique.h sdl2-ttf-light.h accueil.h controler.h
-SRC = main.c sdl2-light.c donnees.c graphique.c sdl2-ttf-light.c accueil.c controler.c
+INC = sdl2-light.h constantes.h donnees.h graphique.h sdl2-ttf-light.h accueil.h 
+SRC = main.c sdl2-light.c donnees.c graphique.c sdl2-ttf-light.c accueil.c 
 OBJ = $(SRC:%.c=%.o)
 
-PROG = spacebattle.exe
+PROG = spacebattle
 
 %.o: %.c $(INC)
-	gcc $(CFLAGS) -c $<  -I $(SDL2_INCLUDE_DIR)
+	gcc $(CFLAGS) -c $<
 
-$(PROG): $(OBJ)
-	gcc $(CFLAGS) $(OBJ) $(LDFLAGS) -o $@ -L $(SDL2_LIBRARIES_DIR)
-
+spacebattle: $(OBJ)
+	gcc $(CFLAGS) $(OBJ) $(LDFLAGS) -o $@
+	
 doc: $(PROG)
-	doxygen $(PROG)
+	doxygen ./$(PROG)
+	make -C latex
 
-.PHONY: clean
 clean:
-	del /f /q *.o *~ $(PROG)
-	rd /s /q latex html
+	rm -f *~ *.o $(PROG)
+	rm -rf latex html
 
 tests:
-	gcc test.c donnees.o -o test -I $(SDL2_INCLUDE_DIR) -L $(SDL2_LIBRARIES_DIR) -lm -lmingw32 -lSDL2main -lSDL2
+	gcc test.c donnees.o -o test `sdl2-config --libs` -lSDL2_ttf -lm
 	./test
