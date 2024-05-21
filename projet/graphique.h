@@ -115,10 +115,33 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, wo
 void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world);
 
 
-
+/**
+ * \brief Procédure qui gère l'affichage de game over
+ * @param window Pointeur vers la fenêtre du jeu.
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+*/
 void GameOver(SDL_Renderer *renderer, world_t *world,textures_t *textures);
 
+/**
+ * \brief Procédure qui gère l'affichage des valeurs sous forme de texte (vague, score, gold)
+ * @param window Pointeur vers la fenêtre du jeu.
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+ * @param color Couleur du texte
+ * @param score_str Version string du score
+ * @param vague_str Version string des vagues
+ * @param gold_str Version string des gold
+*/
 void AffichageValeur(SDL_Renderer *renderer, world_t *world,textures_t *textures,SDL_Color color,char * score_str,char * vague_str,char * gold_str);
+
+/**
+ * \brief gestion de l'affichage entre les vagues du jeu
+ * @param window Pointeur vers la fenêtre du jeu.
+ * @param renderer Pointeur vers le renderer utilisé.
+ * @param textures Pointeur vers la structure de textures.
+ * @param vague_str Version string du nombre de vagues
+*/
 void AffichageEntreVague(SDL_Renderer *renderer, world_t *world,textures_t *textures,char * vague_str);
 
 #endif
