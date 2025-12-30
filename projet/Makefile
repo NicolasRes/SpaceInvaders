@@ -1,4 +1,4 @@
-CFLAGS = -O3 `sdl2-config --cflags`
+CFLAGS = -O3 -Wall -Wextra `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs` -lSDL2_ttf -lm
 
 INC = sdl2-light.h constantes.h donnees.h graphique.h sdl2-ttf-light.h accueil.h 
@@ -17,7 +17,7 @@ doc: $(PROG)
 	doxygen ./$(PROG)
 	make -C latex
 
-clean:
+clear:
 	rm -f *~ *.o $(PROG)
 	rm -rf latex html
 
