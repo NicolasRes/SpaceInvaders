@@ -1,6 +1,6 @@
 #include "accueil.h"
 
-int Passage_bouton(SDL_EventType event_type, SDL_Event event, int button_x, int button_y, int largeur, int hauteur) {
+int Passage_bouton(SDL_EventType event_type, int button_x, int button_y, int largeur, int hauteur) {
     int mouseX, mouseY;
     switch (event_type) {
         case SDL_MOUSEMOTION:
@@ -80,11 +80,13 @@ void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer) {
             }
         }
 
-        if (Passage_bouton(SDL_MOUSEMOTION, event, button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
+        if (Passage_bouton(SDL_MOUSEMOTION,  button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
             apply_text(renderer, button_jouer_x, button_jouer_y, button_largeur, button_hauteur, "JOUER", font, GREEN);
-        } else if (Passage_bouton(SDL_MOUSEMOTION, event, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
+        } 
+        else if (Passage_bouton(SDL_MOUSEMOTION, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
             apply_text(renderer, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur, "QUITTER", font, GREEN);
-        } else {
+        } 
+        else {
             apply_text(renderer, button_jouer_x, button_jouer_y, button_largeur, button_hauteur, "JOUER", font, WHITE);
             apply_text(renderer, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur, "QUITTER", font, WHITE);
         }

@@ -52,14 +52,13 @@ int Detection_Click_Bouton(int x, int y, int button_x, int button_y, int largeur
  * @brief Vérifie si la souris survole un bouton donné.
  *
  * @param event_type Le type d'événement SDL.
- * @param event L'événement SDL.
  * @param button_x La coordonnée x du coin supérieur gauche du bouton.
  * @param button_y La coordonnée y du coin supérieur gauche du bouton.
  * @param largeur La largeur du bouton.
  * @param hauteur La hauteur du bouton.
  * @return 1 si la souris survole le bouton, 0 sinon.
  */
-int Passage_bouton(SDL_EventType event_type, SDL_Event event, int button_x, int button_y, int largeur, int hauteur);
+int Passage_bouton(SDL_EventType event_type, int button_x, int button_y, int largeur, int hauteur);
 
 /**
  * @brief Quitte l'application proprement en libérant la mémoire allouée et en fermant les fenêtres.

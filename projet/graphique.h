@@ -49,7 +49,7 @@ void init_textures(SDL_Renderer *renderer, textures_t *textures);
  * @param longueur La nouvelle longueur de la texture.
  * @param largeur La nouvelle largeur de la texture.
  */
-void Changer_taille_image(SDL_Renderer *renderer, SDL_Texture **texture_ptr, textures_t *textures, int longueur, int largeur);
+void changer_taille_image(SDL_Renderer *renderer, SDL_Texture **texture_ptr, int longueur, int largeur);
 
 /**
  * @brief Applique le fond d'écran.
@@ -121,7 +121,7 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
  * @param renderer Pointeur vers le renderer utilisé.
  * @param textures Pointeur vers la structure de textures.
 */
-void GameOver(SDL_Renderer *renderer, world_t *world,textures_t *textures);
+void GameOver(SDL_Renderer *renderer, textures_t *textures);
 
 /**
  * \brief Procédure qui gère l'affichage des valeurs sous forme de texte (vague, score, gold)
@@ -133,7 +133,7 @@ void GameOver(SDL_Renderer *renderer, world_t *world,textures_t *textures);
  * @param vague_str Version string des vagues
  * @param gold_str Version string des gold
 */
-void AffichageValeur(SDL_Renderer *renderer, world_t *world,textures_t *textures,SDL_Color color,char * score_str,char * vague_str,char * gold_str);
+void affichageValeur(SDL_Renderer *renderer, textures_t *textures,SDL_Color color,char * score_str,char * vague_str,char * gold_str);
 
 /**
  * \brief gestion de l'affichage entre les vagues du jeu
@@ -142,6 +142,6 @@ void AffichageValeur(SDL_Renderer *renderer, world_t *world,textures_t *textures
  * @param textures Pointeur vers la structure de textures.
  * @param vague_str Version string du nombre de vagues
 */
-void AffichageEntreVague(SDL_Renderer *renderer, world_t *world,textures_t *textures,char * vague_str);
+void affichageEntreVague(SDL_Renderer *renderer, world_t *world,textures_t *textures,char * vague_str);
 
 #endif

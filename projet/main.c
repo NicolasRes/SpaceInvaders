@@ -1,6 +1,6 @@
 /**
  * \file main.c
- * \brief Programme principal initial du niveau 2
+ * \brief Programme principal
  * \author  Mathias et Nicolas 
  * \version 1.0
  * 
@@ -19,7 +19,12 @@
  */
 
 
-int main( int argc, char* args[] ){
+int main(int argc, char* args[]){
+    // Paramètres inutilisés
+    (void)argc;
+    (void)args;
+    //
+
     SDL_Event event;
     world_t world;
     textures_t textures;
@@ -43,7 +48,7 @@ int main( int argc, char* args[] ){
         pause(17);
     }
     MessageVictoire(&world);
-    GameOver(renderer,&world,&textures);
+    GameOver(renderer, &textures);
     pause(TEMPS);
     //nettoyage final
     clean(window,renderer,&textures,&world);
