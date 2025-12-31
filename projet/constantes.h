@@ -24,10 +24,10 @@
 #define SCREEN_ACC_HEIGHT 300
 
 
-#define WHITE (SDL_Color){255, 255, 255}
+#define WHITE (SDL_Color){255, 255, 255, 255}
 
 
-#define GREEN (SDL_Color){0, 255, 0}
+#define GREEN (SDL_Color){0, 255, 0, 255}
 
 
 /**
