@@ -78,7 +78,7 @@ void clean_data(world_t *world){
     free(world->vaisseau);
     free(world->missile);
     for (int i=0;i<world->nb_enemies_current;i++){
-        (world->enemies[i]);
+        free((world->enemies[i]));
     }
     free(world->enemies);
 }
