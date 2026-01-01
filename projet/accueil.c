@@ -1,6 +1,6 @@
 #include "accueil.h"
 
-int Passage_bouton(SDL_EventType event_type, int button_x, int button_y, int largeur, int hauteur) {
+int passage_bouton(SDL_EventType event_type, int button_x, int button_y, int largeur, int hauteur) {
     int mouseX, mouseY;
     switch (event_type) {
         case SDL_MOUSEMOTION:
@@ -11,7 +11,7 @@ int Passage_bouton(SDL_EventType event_type, int button_x, int button_y, int lar
     }
 }
 
-int Detection_Click_Bouton(int x, int y, int button_x, int button_y, int largeur, int hauteur) {
+int detection_click_bouton(int x, int y, int button_x, int button_y, int largeur, int hauteur) {
     return (x >= button_x && x <= button_x + largeur && y >= button_y && y <= button_y + hauteur);
 }
 
@@ -41,7 +41,7 @@ void quitter_application(SDL_Window *window, SDL_Renderer *renderer) {
 }
 
 
-void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer) {
+void creer_accueil(SDL_Window *window, SDL_Renderer *renderer) {
     
     SDL_Texture *background_texture =charger_background(renderer);
     SDL_RenderCopy(renderer, background_texture, NULL, NULL);
@@ -71,19 +71,19 @@ void Creer_Acceuil(SDL_Window *window, SDL_Renderer *renderer) {
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 int x = event.button.x;
                 int y = event.button.y;
-                if (Detection_Click_Bouton(x, y, button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
+                if (detection_click_bouton(x, y, button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
                     jouer = 1;
-                } else if (Detection_Click_Bouton(x, y, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
+                } else if (detection_click_bouton(x, y, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
                     quitter = 1;
                     quitter_application(window, renderer);
                 }
             }
         }
 
-        if (Passage_bouton(SDL_MOUSEMOTION,  button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
+        if (passage_bouton(SDL_MOUSEMOTION,  button_jouer_x, button_jouer_y, button_largeur, button_hauteur)) {
             apply_text(renderer, button_jouer_x, button_jouer_y, button_largeur, button_hauteur, "JOUER", font, GREEN);
         } 
-        else if (Passage_bouton(SDL_MOUSEMOTION, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
+        else if (passage_bouton(SDL_MOUSEMOTION, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur)) {
             apply_text(renderer, button_jouer_x, button_jouer_y + 75, button_largeur, button_hauteur, "QUITTER", font, GREEN);
         } 
         else {
