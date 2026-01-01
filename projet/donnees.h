@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "sdl2-light.h"
 #include "constantes.h"
+#include "etat.h"
 
 /**
 *\brief structure pour représenter le vaisseau
@@ -33,27 +34,33 @@ typedef struct sprite_s sprite_t;
  * \a score score du joueur
  * \a win etat pour voir si le joueur a tué tous les enemies de la vague
  * \a gameover etat pour dire si le joueur a été touché nombre de vaisseaux enemies sortient
- * \a 
- * \a
- * \a
  * 
 */
 
 struct world_s{
-    
     sprite_t * vaisseau; // structure
     sprite_t * missile;
     sprite_t ** enemies;
     int nb_v_out; 
-    int score; // 
-    int win; // 
-    int gameover; // 
-    int vague;// numero de la vague
-    int nb_enemies_current;// nombre d'enemies par vague
+    int score;
+    int win;
+    int gameover;
+    int vague;  // numero de la vague
+    int nb_enemies_current; // nombre d'ennemis par vague
     int vitesse_enemies;
     int score_manche;
-    int attente;// etat pour afficher numéro vague (petite pause)
-    int gold;// ajout argent pour futur achat d'amélioration
+    int attente;    // etat pour afficher numéro vague (petite pause)
+    int gold;   // ajout argent pour futur achat d'amélioration
+    game_state_t state;
+    
+    // Stats à upgrade
+    int dmg;
+    int fire_cooldown_ms;
+    int missile_speed_bonus;
+    int ship_speed_bonus;
+    int max_hp;
+    int hp;
+    Uint32 last_shot_ticks; // cooldown
 };
 
 /**
@@ -197,7 +204,7 @@ void update_data(world_t *world);
  * \brief La fonction met à jour les données par defaut du monde 
  * \param world données du monde
  */
-void Pardefaut(world_t* world);
+void init_world(world_t* world);
 
 /**
  * \brief La fonction met game over à 1

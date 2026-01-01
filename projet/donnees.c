@@ -44,7 +44,7 @@ void print_sprite (sprite_t * sprite) {
     printf("en vie :%d\n ", sprite->is_alive);
 }
 
-void Pardefaut(world_t* world){
+void init_world(world_t* world){
     world->nb_v_out = 0;
     world->score = 0;
     world->gold = 0;
@@ -54,14 +54,23 @@ void Pardefaut(world_t* world){
     world->nb_enemies_current = NB_ENEMIES;
     world->vitesse_enemies= ENEMY_SPEED;
     world->score_manche=0;
+    world->state = STATE_MENU;
+    world->dmg = 1;
+    world->fire_cooldown_ms = 400;          // délai min entre tirs
+    world->missile_speed_bonus = 0;
+    world->ship_speed_bonus = 0;
 
+    world->max_hp = 1;
+    world->hp = world->max_hp;
+
+    world->last_shot_ticks = 0;
 }
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
     world->missile = malloc(sizeof(sprite_t));
 
-    Pardefaut(world);
+    init_world(world);
 
     //init joueur
     init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
@@ -74,13 +83,18 @@ void init_data(world_t * world){
    
 }
 
-void clean_data(world_t *world){
-    free(world->vaisseau);
-    free(world->missile);
-    for (int i=0;i<world->nb_enemies_current;i++){
+static void free_enemies(world_t *world) {  // Static car liée à ce fichier uniquement
+    for (int i=0; i<world->nb_enemies_current; i++){
         free((world->enemies[i]));
     }
     free(world->enemies);
+    world->enemies = NULL;
+}
+
+void clean_data(world_t *world){
+    free(world->vaisseau);
+    free(world->missile);
+    free_enemies(world);
 }
 
 int is_game_over(world_t *world){
@@ -177,7 +191,7 @@ void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *worl
         sp2->is_alive = 0;
         set_invisible(sp1);
         world->score+=1;
-        world->gold+=rand()%(10-1)+1;
+        world->gold+=rand()%9 + 1;
         printf("Gold : %d\n", world->gold);
         world->score_manche+=1;
     }
@@ -217,56 +231,38 @@ void Verif_TousAbattus(world_t *world){
 }
 
 void MiseAJour_Vague(world_t *world){
-
     world->vague += 1;
     world->nb_v_out = 0;
     world->nb_enemies_current += 2;
     world->score_manche = 0;
     world->vitesse_enemies += 1;
     world->vaisseau->v+=1;
-    world->missile->v+=1;
-        
+    world->missile->v+=1;  
 }
 
 
 void Verif_FinDevague(world_t *world) {
-
-    //tous le enemies abattu ou passés
     if (world->nb_v_out + world->score_manche == world->nb_enemies_current) {
-
         Verif_TousAbattus(world);
-
-        //attente affichage num vague
-        world->attente=1;
-
-        MiseAJour_Vague(world);
-
-        //libération mémoire enemies vague
-        free(world->enemies);
-
-        //création enemies en fonction du nombre d'enememies
-        init_enemies(world);
-    } 
-
+        world->attente = 1;
+        world->state = STATE_SHOP;
+    }
 }
 
 void compute_game(world_t *world) {
-
     Verif_Gameover(world);
-
-    Verif_FinDevague(world);
-        
+    Verif_FinDevague(world);  
 }
 
 void update_missile(world_t *world){
 
     if(world->missile->is_visible == 1) {
-        world->missile->y -= world->missile->v;
+        int speed = world->missile->v + world->missile_speed_bonus;
+        world->missile->y -= speed;
     }
 }
 
 void Verif_Collision(world_t *world){
-
     for (int i = 0; i < world->nb_enemies_current; i++) {
         handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
         handle_sprites_collision_missile(world->missile,world->enemies[i],world);
@@ -294,19 +290,27 @@ void update_data(world_t *world){
 void handle_events(SDL_Event *event, world_t *world) {
     const Uint8 *keystates;
     keystates = SDL_GetKeyboardState(NULL);
+    Uint32 now = SDL_GetTicks();    // Nb de ms depuis l'initialisation de la librairie SDL
         
     //déplacement vers droite
     if (keystates[SDL_SCANCODE_D]) {
-        world->vaisseau->x += world->vaisseau->v;
+        world->vaisseau->x += world->vaisseau->v + world->ship_speed_bonus;
     }
     //déplacement vers gauche
     if (keystates[SDL_SCANCODE_Q]) {
-        world->vaisseau->x -= world->vaisseau->v;
+        world->vaisseau->x -= world->vaisseau->v + world->ship_speed_bonus;
     }
 
-    // téléporter missile sur le vaisseau puis tire si missile invisible
-    if (keystates[SDL_SCANCODE_SPACE] && world->vaisseau->is_visible && world->vaisseau->is_alive && world->missile->is_alive == 0 && world->missile->is_visible == 0) {
+    // Le missile dépend du cooldown, on n'a plus à attendre que l'ancien missile sorte de l'écran ou touche une cible pour tirer à nouveau
+    // Un seul missile à la fois pour le moment
+    if (keystates[SDL_SCANCODE_SPACE] &&
+        world->vaisseau->is_visible &&
+        world->vaisseau->is_alive &&
+        (now - world->last_shot_ticks >= (Uint32)world->fire_cooldown_ms)) {
         
+        world->last_shot_ticks = now;
+
+        // Spawn missile
         world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
         world->missile->y = world->vaisseau->y - MISSILE_SIZE;
         world->missile->is_visible = 1;
