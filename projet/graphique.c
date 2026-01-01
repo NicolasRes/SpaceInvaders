@@ -1,5 +1,15 @@
 #include "graphique.h"
+#include "constantes.h"
 
+///// Fonctions internes /////
+static void apply_missiles(SDL_Renderer *renderer, world_t *world, textures_t *textures)
+{
+    for (int i = 0; i < MAX_MISSILES; i++) {
+        apply_sprite(renderer, textures->missile, &world->missiles[i]);
+    }
+}
+
+///// Fonctions globales /////
 
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
@@ -51,7 +61,8 @@ char* int_to_string (int value) {
     return str;
 }
 
-void affichageValeur(SDL_Renderer *renderer, textures_t *textures,SDL_Color color,char * score_str,char * vague_str,char * gold_str) {
+void affichageValeur(SDL_Renderer *renderer, textures_t *textures,SDL_Color color, 
+                    char * score_str, char * vague_str, char * gold_str) {
 
     // afficher valeur vague, score et gold
     apply_text(renderer,10,10,6*14,50, "Vague ",textures->font,color);
@@ -77,10 +88,14 @@ void affichageEntreVague(SDL_Renderer *renderer, world_t *world, textures_t *tex
 
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
     
-    // Mise à jour affichage valeur su l'ecran
-    char * score_str = int_to_string(world->score);
-    char * vague_str = int_to_string(world->vague);
-    char * gold_str = int_to_string(world->gold);
+    // Mise à jour affichage valeurs à l'écran
+    char score_str[16];
+    char vague_str[16];
+    char gold_str[16];
+
+    snprintf(score_str, sizeof(score_str), "%d", world->score);
+    snprintf(vague_str, sizeof(vague_str), "%d", world->vague);
+    snprintf(gold_str, sizeof(gold_str), "%d", world->gold);
 
     // magenta
     SDL_Color color = {255, 0, 255, 255};
@@ -90,14 +105,15 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     // afficher textures
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->player, world->vaisseau);
-    apply_enemies(renderer,world,textures);
-    apply_sprite(renderer, textures->missile, world->missile);
+    apply_enemies(renderer,world, textures);
+    apply_missiles(renderer, world, textures);
     
     // afficher Valeur utiles
     affichageValeur(renderer, textures, color, score_str, vague_str, gold_str);
 
     // afficher numéro de la nouvelle vague
     affichageEntreVague(renderer,world, textures, vague_str);
+
     // mise à jour écran
     update_screen(renderer);
 }
