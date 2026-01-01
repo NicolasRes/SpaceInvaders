@@ -39,7 +39,7 @@ typedef struct sprite_s sprite_t;
 
 struct world_s{
     sprite_t * vaisseau; // structure
-    sprite_t * missile;
+    sprite_t missiles[MAX_MISSILES];
     sprite_t ** enemies;
     int nb_v_out; 
     int score;
@@ -140,18 +140,6 @@ int is_game_over(world_t *world);
  */
 
 void handle_events(SDL_Event *event,world_t *world);
-
-/**
- * \brief La fonction qui test le dépassement des limites gauche et droites
- * \param world données du monde
- */
-void limite_ecran_joueur(world_t *world);
-
-/**
- * \brief La fonction qui test le dépassement des limites haut et bas
- * \param world données du monde
- */
-void limite_ecran_ennemi(world_t *world);
 
 /**
  * \brief Procédure qui gère la collision entre le vaisseau et un ennemi

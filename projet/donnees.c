@@ -4,6 +4,61 @@
 #include <math.h>
 
 
+///// Fonctions internes /////
+
+static void limite_ecran_joueur(world_t *world){
+    // Limite gauche
+    if (world->vaisseau->x < 0) {
+        world->vaisseau->x = 0;
+    }
+    // Limite droite
+    if (world->vaisseau->x + world->vaisseau->w > SCREEN_WIDTH) {
+        world->vaisseau->x = SCREEN_WIDTH - world->vaisseau->w;
+    }
+}
+
+static void limite_ecran_ennemi(world_t *world){
+    // Limite basse
+    for (int i = 0; i < world->nb_enemies_current; i++) {
+         if (world->enemies[i]->y > SCREEN_HEIGHT) {
+            if (world->enemies[i]->is_alive == 1) {
+                world->enemies[i]->is_alive = 0;
+                world->nb_v_out += 1;
+            }
+        }
+    }
+}
+
+static void limite_ecran_missiles(world_t * world){
+
+    // Limite haute
+    for (int i = 0; i < MAX_MISSILES; i++) {
+        if (world->missiles[i].is_visible && world->missiles[i].y < 0) {
+            world->missiles[i].is_alive = 0;
+            world->missiles[i].is_visible = 0;
+        }
+    }
+}
+
+static void free_enemies(world_t *world) {
+    for (int i=0; i<world->nb_enemies_current; i++){
+        free((world->enemies[i]));
+    }
+    free(world->enemies);
+    world->enemies = NULL;
+}
+
+static sprite_t* get_free_missile(world_t *world){
+    for (int i = 0; i < MAX_MISSILES; i++) {
+        if (world->missiles[i].is_alive == 0 && world->missiles[i].is_visible == 0) {
+            return &world->missiles[i];
+        }
+    }
+    return NULL;
+}
+
+///// Fonctions globales /////
+
 int generate_number (int a,int b ) {
     return rand ()%( b-a)+a ;
 }
@@ -68,69 +123,37 @@ void init_world(world_t* world){
 
 void init_data(world_t * world){
     world->vaisseau = malloc(sizeof(sprite_t));
-    world->missile = malloc(sizeof(sprite_t));
 
     init_world(world);
 
-    //init joueur
-    init_sprite (world->vaisseau, (SCREEN_WIDTH/2) - (SHIP_SIZE/2), SCREEN_HEIGHT- (SHIP_SIZE*3/2), SHIP_SIZE, SHIP_SIZE, world->vaisseau->v = VAISSEAU_SPEED,1);
-    //init missile
-    init_sprite (world->missile, world->vaisseau->x + (SHIP_SIZE/2) - (MISSILE_SIZE/2), world->vaisseau->y - (MISSILE_SIZE), SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED,0);
-    //init enemies
-    init_enemies(world);
-    // mettre invisible le missile
-    set_invisible(world->missile);
-   
-}
+    // init joueur
+    init_sprite (world->vaisseau, 
+        (SCREEN_WIDTH/2) - (SHIP_SIZE/2), 
+        SCREEN_HEIGHT - (SHIP_SIZE*3/2), 
+        SHIP_SIZE, SHIP_SIZE, 
+        VAISSEAU_SPEED, 1);
 
-static void free_enemies(world_t *world) {  // Static car liée à ce fichier uniquement
-    for (int i=0; i<world->nb_enemies_current; i++){
-        free((world->enemies[i]));
+    // init missile
+    for(int i = 0; i < MAX_MISSILES; i++) {
+        init_sprite (&world->missiles[i], 
+            0, 0, 
+            MISSILE_SIZE, MISSILE_SIZE, 
+            MISSILE_SPEED, 0);
+
+        set_invisible(&world->missiles[i]);
+        world->missiles[i].is_alive = 0;
     }
-    free(world->enemies);
-    world->enemies = NULL;
+
+    init_enemies(world);
 }
 
 void clean_data(world_t *world){
     free(world->vaisseau);
-    free(world->missile);
     free_enemies(world);
 }
 
 int is_game_over(world_t *world){
     return world->gameover;
-}
-
-void limite_ecran_joueur(world_t *world){
-    // Limite gauche
-    if (world->vaisseau->x < 0) {
-        world->vaisseau->x = 0;
-    }
-    // Limite droite
-    if (world->vaisseau->x + world->vaisseau->w > SCREEN_WIDTH) {
-        world->vaisseau->x = SCREEN_WIDTH - world->vaisseau->w;
-    }
-}
-
-void limite_ecran_ennemi(world_t *world){
-    // Limite basse
-    for (int i = 0; i < world->nb_enemies_current; i++) {
-         if (world->enemies[i]->y > SCREEN_HEIGHT) {
-            if (world->enemies[i]->is_alive == 1) {
-                world->enemies[i]->is_alive = 0;
-                world->nb_v_out += 1;
-            }
-        }
-    }
-}
-
-void limite_ecran_missile(world_t * world){
-
-    //Limite haute
-    if (world->missile->y < 0) {
-        world->missile->is_alive= 0;
-        world->missile->is_visible= 0;
-    }
 }
 
 int sprites_collide_rectangle(sprite_t *sp1, sprite_t *sp2) {
@@ -184,16 +207,34 @@ void handle_sprites_collision_vaisseau(sprite_t *sp1, sprite_t *sp2) {
     }
 }
 
-void handle_sprites_collision_missile(sprite_t *sp1, sprite_t *sp2,world_t *world) {
-    // Vérifier si les deux sprites sont encore visibles, en vie et en collision
-    if (sp1->is_visible && sp1->is_alive && sp2->is_visible && sp2->is_alive && sprites_collide_cercle(sp1, sp2)) {
-        sp1->is_alive = 0;
-        sp2->is_alive = 0;
-        set_invisible(sp1);
-        world->score+=1;
-        world->gold+=rand()%9 + 1;
-        printf("Gold : %d\n", world->gold);
-        world->score_manche+=1;
+void handle_missile_collision(world_t *world) {
+    // On boucle tant sur tous les missiles
+    for (int m = 0; m < MAX_MISSILES; m++) {
+        sprite_t *missile = &world->missiles[m];
+
+        // Si le missile est en vie, on ignore
+        if (!missile->is_alive) continue;
+
+        // On boucle sur les ennemis en vie
+        for (int e = 0; e < world->nb_enemies_current; e++) {
+            sprite_t *enemy = world->enemies[e];
+            
+            // Si l'ennemi n'est pas en vie, on ignore
+            if (!enemy->is_alive) continue;
+
+            // En cas de collision entre un missile et un ennemi, le missile et l'ennemi disparaissent
+            if (sprites_collide_cercle(missile, enemy)) {
+                missile->is_alive = 0;
+                missile->is_visible = 0;
+                enemy->is_alive = 0;
+
+                // On gère aussi le score et l'argent gagné
+                world->score++;
+                world->gold += rand() % 9 + 1;
+                world->score_manche++;
+                break; // un missile touche un seul ennemi
+            }
+        }
     }
 }
 
@@ -237,7 +278,6 @@ void MiseAJour_Vague(world_t *world){
     world->score_manche = 0;
     world->vitesse_enemies += 1;
     world->vaisseau->v+=1;
-    world->missile->v+=1;  
 }
 
 
@@ -254,20 +294,21 @@ void compute_game(world_t *world) {
     Verif_FinDevague(world);  
 }
 
-void update_missile(world_t *world){
-
-    if(world->missile->is_visible == 1) {
-        int speed = world->missile->v + world->missile_speed_bonus;
-        world->missile->y -= speed;
+void update_missiles(world_t *world){
+    for (int i = 0; i < MAX_MISSILES; i++) {
+        if (world->missiles[i].is_visible) {
+            int speed = world->missiles[i].v + world->missile_speed_bonus;
+            world->missiles[i].y -= speed;
+        }
     }
 }
 
 void Verif_Collision(world_t *world){
     for (int i = 0; i < world->nb_enemies_current; i++) {
-        handle_sprites_collision_vaisseau(world->vaisseau,world->enemies[i]);
-        handle_sprites_collision_missile(world->missile,world->enemies[i],world);
-        compute_game(world); 
+        handle_sprites_collision_vaisseau(world->vaisseau, world->enemies[i]);
     }
+    handle_missile_collision(world);
+    compute_game(world); 
 }
 
 void update_data(world_t *world){
@@ -275,12 +316,12 @@ void update_data(world_t *world){
     update_enemies(world);
 
     //faire avancer missile
-    update_missile(world);
+    update_missiles(world);
     
     //Vérification limite sprites
     limite_ecran_joueur(world);
     limite_ecran_ennemi(world);
-    limite_ecran_missile(world);
+    limite_ecran_missiles(world);
 
     Verif_Collision(world);
     
@@ -308,13 +349,16 @@ void handle_events(SDL_Event *event, world_t *world) {
         world->vaisseau->is_alive &&
         (now - world->last_shot_ticks >= (Uint32)world->fire_cooldown_ms)) {
         
-        world->last_shot_ticks = now;
+        sprite_t *m = get_free_missile(world);
 
         // Spawn missile
-        world->missile->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
-        world->missile->y = world->vaisseau->y - MISSILE_SIZE;
-        world->missile->is_visible = 1;
-        world->missile->is_alive = 1;
+        if(m) {
+            world->last_shot_ticks = now;
+            m->x = world->vaisseau->x + SHIP_SIZE/2 - MISSILE_SIZE/2;
+            m->y = world->vaisseau->y - MISSILE_SIZE;
+            m->is_visible = 1;
+            m->is_alive = 1;
+        }
     }
 
     // vérification si quitte (croix rouge)
