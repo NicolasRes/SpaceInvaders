@@ -43,6 +43,11 @@
 #define MISSILE_SIZE 8
 
 /**
+ * @brief Nombre maximum de missiles à l'écran
+ */
+#define MAX_MISSILES 32
+
+/**
 * \brief Vitesse de l'ennemi
 */
 #define ENEMY_SPEED 1
