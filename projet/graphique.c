@@ -120,7 +120,7 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, wo
 void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world){
     init_sdl(window,renderer,SCREEN_ACC_WIDTH, SCREEN_ACC_HEIGHT);
     init_ttf();
-    Creer_Acceuil(*window, *renderer);
+    creer_accueil(*window, *renderer);
     init_data(world);
     init_textures(*renderer,textures);
 }
