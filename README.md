@@ -2,7 +2,7 @@
 
 ![til](/projet/ressources/spacebattle.gif)
 
-Petit jeu 2D inspiré de Space Invaders, développé en C avec la bibliothèque SDL2 dans le cadre d'un projet étudiant de première année d'informatique.
+Petit jeu 2D inspiré de Space Invaders, développé en C avec la bibliothèque SDL2 en binôme dans le cadre d'un projet étudiant de première année d'informatique.
 
 ## 📦 Prérequis
 
